@@ -10,7 +10,7 @@
     "scripts": {
         "build": "tsc --project tsconfig.build.json",
         "prepublishOnly": "npm run build",
-        "lint": "eslint . --ext .ts,.tsx",
+        "lint": "eslint .",
         "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
         "test": "jest"
     },
@@ -40,6 +40,8 @@
         "react-router-dom": ">=7.0.0"
     },
     "devDependencies": {
+        "@eslint/eslintrc": "^3.2.0",
+        "@eslint/js": "^9.20.0",
         "@headlessui/react": "^2.2.0",
         "@headlessui/tailwindcss": "^0.2.2",
         "@types/node": "^22.13.4",
@@ -51,6 +53,7 @@
         "eslint-config-prettier": "^10.0.1",
         "eslint-plugin-prettier": "^5.2.3",
         "eslint-plugin-react": "^7.37.4",
+        "globals": "^15.15.0",
         "husky": "^9.1.7",
         "jest": "^29.7.0",
         "lint-staged": "^15.4.3",

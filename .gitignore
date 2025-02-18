@@ -142,4 +142,4 @@ dist
 # Operating System files
 .DS_Store
 
-.package-lock.json
+package-lock.json
