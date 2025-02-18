@@ -27,6 +27,7 @@ export default [...compat.extends(
         "postcss.config.js",
         "tailwind.config.js",
         "stylelint.config.js",
+        ".rollup.cache/**",
     ],
 },{
     plugins: {
