@@ -12,7 +12,6 @@ export default {
   plugins: [
     nodeResolve(),
     commonjs(),
-    // Disable declaration generation here because tsc handles it
     typescript({ tsconfig: './tsconfig.build.json' })
   ],
   output: [
