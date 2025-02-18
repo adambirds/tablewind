@@ -1,6 +1,6 @@
 {
     "name": "tablewind",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A React/Next.js/Tailwind CSS library for data tables.",
     "main": "dist/react.js",
     "types": "dist/react.d.ts",
