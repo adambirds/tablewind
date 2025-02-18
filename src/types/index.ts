@@ -7,40 +7,40 @@ export interface Pagination {
     has_previous_page: boolean;
     next_page?: number;
     previous_page?: number;
-  }
-  
-  export interface PaginatedResponse<T> {
+}
+
+export interface PaginatedResponse<T> {
     results: T[];
     pagination: Pagination;
-    available_filters?: any;
-  }
-  
-  export interface ColumnConfig<T> {
+    // Instead of any, we now expect available_filters to be a record of filter options.
+    available_filters?: Record<string, Array<{ id: string; name: string }>>;
+}
+
+export interface ColumnConfig<T> {
     label: string;
     accessor: keyof T | string;
     saveKey?: string;
     sortable?: boolean;
     sortKey?: string;
-    render?: (row: T) => React.ReactNode; // Add this line
+    render?: (row: T) => React.ReactNode;
     // New properties for inline editing:
     editable?: boolean;
     inputType?: 'text' | 'checkbox' | 'select' | 'multi-select';
     options?: Array<{ id: string; name: string }>;
-  }
-  
-  
-  export type FilterFieldType = 'text' | 'select' | 'multi-select';
-  
-  export interface FilterField {
+}
+
+export type FilterFieldType = 'text' | 'select' | 'multi-select';
+
+export interface FilterField {
     name: string;
     apiKey?: string;
     allOption?: string;
     type: FilterFieldType;
     options?: { id: string; name: string }[];
-  }
-  
-  /** BulkAction allows the consumer to define custom bulk actions */
-  export interface BulkAction {
+}
+
+/** BulkAction allows the consumer to define custom bulk actions */
+export interface BulkAction {
     /** Unique key for the action */
     key: string;
     /** Button label */
@@ -49,9 +49,9 @@ export interface Pagination {
     onClick: (selectedIds: string[]) => Promise<void> | void;
     /** Optional additional class names for styling */
     className?: string;
-  }
-  
-  export interface DataTableProps<T> {
+}
+
+export interface DataTableProps<T> {
     /** The title of the page */
     pageTitle?: string;
     /** The subtitle of the page */
@@ -63,7 +63,7 @@ export interface Pagination {
     /** Initial query parameters */
     initialQuery?: Record<string, string>;
     /** Optional custom fetcher */
-    fetcher?: (url: string) => Promise<any>;
+    fetcher?: (url: string) => Promise<PaginatedResponse<T>>;
     /** Callback when row selection changes */
     onRowSelect?: (selectedIds: string[]) => void;
     /** Filter fields to render above the table */
@@ -74,5 +74,4 @@ export interface Pagination {
     className?: string;
     /** Handler for deleting */
     handleDelete?: (id: string) => void;
-  }
-  
+}

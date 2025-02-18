@@ -1,5 +1,5 @@
-import React, {useState, useEffect, useRef} from "react";
-import {createPortal} from "react-dom";
+import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 interface Option {
     id: string;
@@ -26,18 +26,19 @@ export function MultiSelectDropdown({
     const toggleDropdown = () => setIsOpen((prev) => !prev);
 
     const handleOptionClick = (id: string) => {
-        console.log("Clicked option id:", id);
+        console.log('Clicked option id:', id);
         const currentSelected = Array.isArray(selected) ? selected : [];
         // Only add if id is truthy and not already included.
         if (id && !currentSelected.includes(id)) {
-          const newSelection = [...currentSelected.filter((x) => x !== null), id];
-          console.log("New selection array:", newSelection);
-          onChange(newSelection);
+            const newSelection = [
+                ...currentSelected.filter((x) => x !== null),
+                id,
+            ];
+            console.log('New selection array:', newSelection);
+            onChange(newSelection);
         }
         setIsOpen(false);
-      };
-      
-      
+    };
 
     const handleRemove = (id: string, e: React.MouseEvent) => {
         e.stopPropagation();
@@ -48,7 +49,7 @@ export function MultiSelectDropdown({
         if (isOpen && containerRef.current) {
             const rect = containerRef.current.getBoundingClientRect();
             setDropdownStyle({
-                position: "absolute",
+                position: 'absolute',
                 top: rect.bottom + window.scrollY + 4,
                 left: rect.left + window.scrollX,
                 width: rect.width,
@@ -81,7 +82,7 @@ export function MultiSelectDropdown({
     return (
         <div
             ref={containerRef}
-            className={`relative w-full ${className || ""}`}
+            className={`relative w-full ${className || ''}`}
         >
             <div
                 onClick={toggleDropdown}
