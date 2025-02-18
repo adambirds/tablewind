@@ -1,12 +1,15 @@
 {
     "name": "tablewind",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "description": "A React/Next.js/Tailwind CSS library for data tables.",
-    "main": "dist/src/react.js",
+    "main": "index.js",
+    "type": "module",
     "types": "index.d.ts",
     "files": [
       "dist",
-      "index.d.ts"
+      "index.d.ts",
+        "index.js",
+        "next"
     ],
     "scripts": {
       "build": "tsc --project tsconfig.build.json && rollup -c",

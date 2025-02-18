@@ -60,12 +60,12 @@ export default [...compat.extends(
     rules: {
         "react/prop-types": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
-
         "@typescript-eslint/no-unused-vars": ["error", {
             argsIgnorePattern: "^_",
             varsIgnorePattern: "^_",
             caughtErrorsIgnorePattern: "^_",
         }],
+        "@typescript-eslint/no-require-imports": "off",
     },
     
 }];
