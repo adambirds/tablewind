@@ -18,5 +18,3 @@ export function DataTable<T extends { id: string }>(
     // Pass the navigate function and other props to the DataTableBase component.
     return <DataTableComponent {...props} navigate={nextNavigate} />;
 }
-
-export default DataTable;

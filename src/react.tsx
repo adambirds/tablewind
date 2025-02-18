@@ -13,5 +13,3 @@ export function DataTable<T extends { id: string }>(
 
     return <DataTableBase {...props} navigate={reactNavigate} />;
 }
-
-export default DataTable;

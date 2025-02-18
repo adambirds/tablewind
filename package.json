@@ -1,6 +1,6 @@
 {
     "name": "tablewind",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "A React/Next.js/Tailwind CSS library for data tables.",
     "main": "dist/react.js",
     "types": "dist/react.d.ts",
@@ -8,7 +8,7 @@
         "dist"
     ],
     "scripts": {
-        "build": "tsc --project tsconfig.build.json",
+        "build": "rollup -c",
         "prepublishOnly": "npm run build",
         "lint": "eslint .",
         "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
@@ -44,6 +44,10 @@
         "@eslint/js": "^9.20.0",
         "@headlessui/react": "^2.2.0",
         "@headlessui/tailwindcss": "^0.2.2",
+        "@rollup/plugin-babel": "^6.0.4",
+        "@rollup/plugin-commonjs": "^28.0.2",
+        "@rollup/plugin-node-resolve": "^16.0.0",
+        "@rollup/plugin-typescript": "^12.1.2",
         "@types/node": "^22.13.4",
         "@types/react": "^19.0.10",
         "@types/react-dom": "^19.0.4",
@@ -60,6 +64,7 @@
         "next": "^15.1.7",
         "prettier": "^3.5.1",
         "react": "^19.0.0",
+        "rollup": "^4.34.8",
         "typescript": "^5.7.3"
     },
     "exports": {
