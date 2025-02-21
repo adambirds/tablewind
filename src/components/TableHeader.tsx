@@ -16,20 +16,20 @@ export function TableHeader<T>({
     onSort,
     sortBy,
     order,
-    className = 'sticky top-0 z-20',
+    className = 'sticky top-0 z-20 bg-light_header_bg dark:bg-dark_header_bg',
     selectAll,
     toggleSelectAll,
 }: TableHeaderProps<T>) {
     const anyEditable = columns.some((col) => col.editable);
     return (
         <thead className={className}>
-            <tr className="bg-gray-50 ring-1 shadow ring-black/5 dark:bg-slate-700">
-                <th className="sticky left-0 rounded-tl-lg bg-gray-50 pl-2 dark:bg-slate-700">
+            <tr className="ring-1 shadow ring-light_header_ring/5 bg-light_table_header_bg dark:bg-dark_table_header_bg dark:ring-dark_header_ring/5">
+                <th className="sticky left-0 rounded-tl-lg pl-2 bg-light_table_header_bg dark:bg-dark_table_header_bg">
                     <input
                         type="checkbox"
                         checked={selectAll}
                         onChange={toggleSelectAll}
-                        className="h-6 w-6 rounded-full border-gray-300 text-sky-600 focus:ring-sky-500 dark:border-gray-700 dark:bg-gray-800 dark:checked:bg-sky-300"
+                        className="h-6 w-6 rounded-full border-light_tablewind_border_primary text-light_tablewind_accent dark:text-dark_tablewind_accent focus:ring-light_tablewind_accent_hover dark:focus:ring-dark_tablewind_accent_hover dark:border-dark_tablewind_border_primary dark:bg-dark_tablewind_bg_primary checked:bg-light_tablewind_accent dark:checked:bg-dark_tablewind_accent"
                     />
                 </th>
                 {columns.map((col, idx) => (
@@ -37,7 +37,7 @@ export function TableHeader<T>({
                         key={idx}
                         onClick={() => onSort(col)}
                         style={{ cursor: col.sortable ? 'pointer' : 'default' }}
-                        className="cursor-pointer py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6 dark:text-gray-100"
+                        className="cursor-pointer py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-light_tablewind_text_primary sm:pl-6 dark:text-dark_tablewind_text_primary"
                     >
                         {col.label}
                         {col.sortable &&
@@ -47,7 +47,7 @@ export function TableHeader<T>({
                     </th>
                 ))}
                 {anyEditable && (
-                    <th className="sticky right-0 rounded-tr-lg bg-gray-50 py-3.5 pr-4 pl-3 sm:pr-6 dark:bg-slate-700">
+                    <th className="sticky right-0 rounded-tr-lg py-3.5 pr-4 pl-3 sm:pr-6 bg-light_table_header_bg dark:bg-dark_table_header_bg">
                         <span className="sr-only">Actions</span>
                     </th>
                 )}

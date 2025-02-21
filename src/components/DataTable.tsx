@@ -6,7 +6,6 @@ import { TableHeader } from './TableHeader';
 import { TableBody } from './TableBody';
 import { PaginationControls } from './PaginationControls';
 import { FilterBar } from './FilterBar';
-import { BulkActionModal } from './BulkActionModal';
 import { BulkActionDropdown } from './BulkActionDropdown';
 
 type EditValues = Record<string, unknown>;
@@ -68,10 +67,6 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
     const [allItemsSelected, setAllItemsSelected] = useState(false);
 
-    // Bulk action modal state.
-    const [selectedBulkAction] = useState<string | null>(null);
-    const [showBulkActionModal, setShowBulkActionModal] = useState(false);
-
     // Inline editing state.
     const [editingRowId, setEditingRowId] = useState<string | null>(null);
     const [editValues, setEditValues] = useState<EditValues>({});
@@ -100,6 +95,22 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                                 ? (item as { id: unknown }).id
                                 : item
                         );
+                } else if (col.inputType === 'select') {
+                    // If the value is already an object, store it directly.
+                    if (
+                        fieldValue &&
+                        typeof fieldValue === 'object' &&
+                        'id' in fieldValue
+                    ) {
+                        newValues[col.accessor as string] = fieldValue;
+                    } else {
+                        // Otherwise, try to look up the corresponding object in col.options.
+                        const selectedOption = col.options?.find(
+                            (opt) => opt.id === fieldValue
+                        );
+                        newValues[col.accessor as string] =
+                            selectedOption || null;
+                    }
                 } else {
                     newValues[col.accessor as string] = fieldValue;
                 }
@@ -364,10 +375,10 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                 <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between">
                     <div className="non-sticky-wrapper">
                         <div className="sticky left-0 text-left">
-                            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                            <h1 className="text-2xl font-bold text-light_tablewind_text_primary dark:text-dark_tablewind_text_primary">
                                 {pageTitle || 'Table'}
                             </h1>
-                            <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                            <p className="mt-2 text-sm text-light_tablewind_text_secondary dark:text-dark_tablewind_text_secondary">
                                 {pageSubtitle ||
                                     'A list of your posts with inline editing, filtering, sorting and pagination.'}
                             </p>
@@ -381,7 +392,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                                 selectedIds.length <
                                     data.pagination.total_items && (
                                     <button
-                                        className="mr-4 ml-2 inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                                        className="mr-4 ml-2 inline-flex justify-center rounded-md border border-light_tablewind_border_primary bg-light_tablewind_bg_primary px-4 py-2 text-sm font-medium text-light_tablewind_text_secondary hover:bg-light_tablewind_bg_primary_hover dark:border-dark_tablewind_border_primary dark:text-dark_tablewind_text_secondary dark:bg-dark_tablewind_bg_primary dark:hover:bg-dark_tablewind_bg_primary_hover"
                                         onClick={markAllSelected}
                                     >
                                         Mark all ({data.pagination.total_items})
@@ -399,7 +410,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                                 onChange={(e) =>
                                     handlePageSizeChange(Number(e.target.value))
                                 }
-                                className="rounded-md border bg-white py-2 pr-8 pl-2 text-sm text-gray-900 hover:bg-gray-50 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                                className="rounded-md border bg-light_tablewind_bg_primary py-2 pr-8 pl-2 text-sm text-light_tablewind_text_primary hover:bg-light_tablewind_bg_primary_hover focus:outline-none dark:border-dark_tablewind_border_primary dark:bg-dark_tablewind_bg_primary dark:text-dark_tablewind_text_secondary"
                             >
                                 {[10, 25, 50, 100].map((size) => (
                                     <option key={size} value={size}>
@@ -409,13 +420,13 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                             </select>
                             <button
                                 onClick={() => nav('/dashboard/posts/new')}
-                                className="rounded-md bg-sky-300 px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm hover:bg-sky-400"
+                                className="rounded-md bg-light_tablewind_accent dark:bg-dark_tablewind_accent px-4 py-2 text-sm font-semibold text-light_tablewind_text_primary shadow-sm dark:hover:bg-dark_tablewind_accent_hover hover:light_tablewind_accent_hover"
                             >
                                 Add New
                             </button>
                             <button
                                 onClick={toggleFilters}
-                                className="rounded-md bg-gray-200 px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-300 dark:bg-slate-700 dark:text-gray-300 dark:hover:bg-slate-600"
+                                className="rounded-md px-3 py-2 text-sm font-medium bg-light_show_filters_bg text-light_show_filters_text hover:bg-light_show_filters_bg_hover dark:bg-dark_show_filters_bg dark:text-dark_show_filters_text dark:hover:bg-dark_show_filters_bg_hover"
                             >
                                 {showFilters ? 'Hide Filters' : 'Show Filters'}
                             </button>
@@ -430,7 +441,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                                             return { ...newQuery, page: '1' };
                                         });
                                     }}
-                                    className="rounded-md bg-red-200 px-3 py-2 text-sm font-medium text-red-900 hover:bg-red-300"
+                                    className="rounded-md bg-light_reset_filters_bg px-3 py-2 text-sm font-medium text-light_reset_filters_text hover:bg-light_reset_filters_bg_hover dark:bg-dark_reset_filters_bg dark:text-dark_reset_filters_text dark:hover:bg-dark_reset_filters_bg_hover"
                                 >
                                     Reset Filters
                                 </button>
@@ -447,7 +458,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                     />
                 )}
                 {allItemsSelected && data && (
-                    <div className="mb-4 rounded bg-green-100 p-2 text-green-800 text-center">
+                    <div className="mb-4 rounded bg-light_success_alert_bg p-2 text-light_success_alert_text text-center dark:bg-dark_success_alert_bg dark:text-dark_success_alert_text">
                         All {data.pagination.total_items} items are selected.
                         <button
                             onClick={cancelAllSelection}
@@ -471,7 +482,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     return (
         <div className={`px-6 ${className || ''}`}>
             <div>
-                <div className="sticky top-0 bg-slate-900 pb-4">
+                <div className="sticky top-0 pb-4 bg-light_header_bg dark:bg-dark_header_bg">
                     {filterContent}
                 </div>
                 <div
@@ -480,7 +491,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                         maxHeight: `calc(100vh - (var(--total-subtraction) * 2) - ${extraContentHeight}px - ${paginationHeight}px)`,
                     }}
                 >
-                    <table className="min-w-full divide-y divide-gray-300">
+                    <table className="min-w-full divide-y divide-dark_table_divider dark:divide-dark_table_divider bg-light_header_bg dark:bg-dark_header_bg">
                         <TableHeader
                             columns={columns}
                             onSort={handleSort}
@@ -510,15 +521,6 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                 onPageChange={handlePageChange}
                 ref={paginationRef}
             />
-            {bulkActions && bulkActions.length > 0 && (
-                <BulkActionModal
-                    isOpen={showBulkActionModal}
-                    title={`Confirm Bulk ${selectedBulkAction}`}
-                    message={`Are you sure you want to perform bulk ${selectedBulkAction} on the selected posts?`}
-                    onConfirm={() => setShowBulkActionModal(false)}
-                    onCancel={() => setShowBulkActionModal(false)}
-                />
-            )}
         </div>
     );
 }

@@ -34,11 +34,11 @@ export const PaginationControls = forwardRef<
                     )
                 }
                 disabled={!safePagination.has_previous_page}
-                className="rounded px-4 py-2 bg-sky-300 text-slate-900 hover:bg-sky-400 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500"
+                className="rounded px-4 py-2 bg-light_tablewind_accent dark:bg-dark_tablewind_accent text-light_button_pagination_text dark:text-dark_button_pagination_text hover:light_tablewind_accent_hover dark:hover:dark_tablewind_accent_hover disabled:cursor-not-allowed disabled:bg-light_button_pagination_disabled_bg disabled:text-light_button_pagination_disabled_text dark:disabled:bg-dark_button_pagination_disabled_bg dark:disabled:text-dark_button_pagination_disabled_text"
             >
                 Previous
             </button>
-            <span className="text-sm text-slate-700">
+            <span className="text-sm text-light_pagination_text dark:text-dark_pagination_text">
                 Page {safePagination.page} of {safePagination.total_pages}
             </span>
             <button
@@ -48,7 +48,7 @@ export const PaginationControls = forwardRef<
                     )
                 }
                 disabled={!safePagination.has_next_page}
-                className="rounded px-4 py-2 bg-sky-300 text-slate-900 hover:bg-sky-400 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500"
+                className="rounded px-4 py-2 bg-light_tablewind_accent dark:bg-dark_tablewind_accent text-light_button_pagination_text dark:text-dark_button_pagination_text hover:light_tablewind_accent_hover dark:hover:dark_tablewind_accent_hover disabled:cursor-not-allowed disabled:bg-light_button_pagination_disabled_bg disabled:text-light_button_pagination_disabled_text dark:disabled:bg-dark_button_pagination_disabled_bg dark:disabled:text-dark_button_pagination_disabled_text"
             >
                 Next
             </button>

@@ -60,7 +60,7 @@ export function MultiSelectDropdown({
     const dropdown = isOpen && (
         <ul
             style={dropdownStyle}
-            className="z-50 rounded-md border border-gray-300 bg-white text-sm shadow-sm dark:border-gray-700 dark:bg-gray-800"
+            className="z-50 rounded-md border border-light_tablewind_border_primary bg-light_tablewind_bg_primary text-sm shadow-sm dark:border-dark_tablewind_border_primary dark:bg-dark_tablewind_bg_primary"
         >
             {options
                 .filter((opt) => !selected.includes(opt.id))
@@ -71,7 +71,7 @@ export function MultiSelectDropdown({
                             handleOptionClick(opt.id);
                             setIsOpen(false);
                         }}
-                        className="cursor-pointer px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className="cursor-pointer px-3 py-2 hover:bg-light_tablewind_bg_primary_hover dark:hover:bg-dark_tablewind_bg_primary_hover"
                     >
                         {opt.name}
                     </li>
@@ -86,22 +86,22 @@ export function MultiSelectDropdown({
         >
             <div
                 onClick={toggleDropdown}
-                className="flex w-full cursor-pointer flex-wrap items-center gap-1 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                className="flex w-full cursor-pointer flex-wrap items-center gap-1 rounded-md border border-light_tablewind_border_primary bg-light_tablewind_bg_primary px-3 py-2 text-sm text-light_tablewind_text_secondary shadow-sm focus:outline-none dark:border-dark_tablewind_border_primary dark:bg-dark_tablewind_bg_primary dark:dark_tablewind_text_secondary"
             >
                 {selected.length === 0 ? (
-                    <span className="text-gray-400">Select Tags...</span>
+                    <span className="text-light_tablewind_text_primary dark:text-dark_tablewind_text_primary">Select Tags...</span>
                 ) : (
                     selected.map((id) => {
                         const option = options.find((opt) => opt.id === id);
                         return option ? (
                             <span
                                 key={id}
-                                className="flex items-center rounded bg-sky-100 px-2 py-0.5 text-xs text-sky-800"
+                                className="flex items-center rounded px-2 py-0.5 text-xs bg-light_multi_select_item_bg dark:bg-dark_multi_select_item_bg text-light_multi_select_item_text dark:text-dark_multi_select_item_text"
                             >
                                 {option.name}
                                 <button
                                     onClick={(e) => handleRemove(id, e)}
-                                    className="ml-1 text-sky-600 hover:text-sky-800 focus:outline-none"
+                                    className="ml-1 focus:outline-none text-light_multi_select_item_text dark:text-dark_multi_select_item_text"
                                 >
                                     &times;
                                 </button>

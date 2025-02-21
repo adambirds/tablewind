@@ -31,7 +31,7 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
     onSaveEdit,
     onCancelEdit,
     onStartEdit,
-    className = 'divide-y divide-gray-200 bg-white dark:bg-slate-800',
+    className = 'divide-y divide-light_table_divider bg-light_tablewind_bg_primary dark:bg-dark_tablewind_bg_primary dark:divide-dark_table_divider',
     handleDelete,
 }: TableBodyProps<T>) {
     const renderEditableCell = (col: ColumnConfig<T>, _row: T) => {
@@ -50,7 +50,7 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                                 [fieldKey]: e.target.value,
                             }))
                         }
-                        className="w-full rounded border bg-white p-1 text-sm dark:bg-gray-800 dark:text-gray-300"
+                        className="w-full rounded border bg-light_tablewind_bg_primary text-light_tablewind_text_secondary p-1 text-sm dark:bg-dark_tablewind_bg_primary dark:text-dark_tablewind_text_secondary"
                     />
                 );
             case 'checkbox':
@@ -64,33 +64,46 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                                 [fieldKey]: value,
                             }))
                         }
-                        className="group relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out data-checked:bg-sky-300"
+                        className="group relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-light_switch_bg dark:bg-dark_switch_bg transition-colors duration-200 ease-in-out data-checked:bg-light_tablewind_accent dark:data-checked:bg-dark_tablewind_accent "
                     >
                         <span className="sr-only">Toggle</span>
-                        <span className="pointer-events-none relative inline-block h-5 w-5 transform rounded-full bg-white shadow-sm transition duration-200 ease-in-out" />
+                        <span className="pointer-events-none relative inline-block h-5 w-5 transform rounded-full bg-light_tablewind_bg_primary shadow-sm transition duration-200 ease-in-out" />
                     </Switch>
                 );
-            case 'select':
-                return (
-                    <select
-                        value={typeof value === 'string' ? value : ''}
-                        onChange={(e) =>
-                            setEditValues &&
+                case 'select':
+                    return (
+                      <select
+                        // Use the object's id if available, otherwise fallback to empty string.
+                        value={
+                            typeof value === 'object' && value !== null && 'id' in value
+                              ? (value as { id: string | number }).id
+                              : typeof value === 'string'
+                              ? value
+                              : ''
+                          }
+                          
+                        onChange={(e) => {
+                          const selectedOption = col.options?.find(
+                            (opt) => String(opt.id) === e.target.value
+                          );
+                          if (setEditValues) {
                             setEditValues((prev) => ({
-                                ...prev,
-                                [fieldKey]: e.target.value,
-                            }))
-                        }
-                        className="w-full rounded border bg-white p-1 text-sm dark:bg-gray-800 dark:text-gray-300"
-                    >
+                              ...prev,
+                              [fieldKey]: selectedOption || null,
+                            }));
+                          }
+                        }}
+                        className="w-full rounded border bg-light_tablewind_bg_primary p-1 text-sm dark:bg-dark_tablewind_bg_primary text-light_tablewind_text_secondary dark:text-dark_tablewind_text_secondary"
+                      >
                         <option value="">Select...</option>
                         {col.options?.map((opt) => (
-                            <option key={opt.id} value={opt.id}>
-                                {opt.name}
-                            </option>
+                          <option key={opt.id} value={opt.id}>
+                            {opt.name}
+                          </option>
                         ))}
-                    </select>
-                );
+                      </select>
+                    );
+                  
             case 'multi-select':
                 return (
                     <MultiSelectDropdown
@@ -123,22 +136,22 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
             {data.map((row) => (
                 <tr
                     key={row.id}
-                    className="group hover:bg-gray-50 dark:hover:bg-slate-600"
+                    className="group hover:bg-light_tablewind_bg_primary_hover dark:hover:bg-dark_tablewind_bg_primary_hover"
                 >
-                    <td className="sticky left-0 bg-white pl-3 group-hover:bg-gray-50 dark:bg-slate-800 dark:group-hover:bg-slate-600">
+                    <td className="sticky left-0 bg-light_tablewind_bg_primary pl-3 group-hover:bg-light_tablewind_bg_primary_hover dark:bg-dark_tablewind_bg_primary dark:group-hover:bg-dark_tablewind_bg_primary_hover">
                         <input
                             type="checkbox"
                             checked={selectedIds.includes(row.id)}
                             onChange={(e) =>
                                 onRowSelect(row.id, e.target.checked)
                             }
-                            className="h-6 w-6 rounded-full border-gray-300 text-sky-600 focus:ring-sky-500 dark:border-gray-700 dark:bg-gray-800 dark:checked:bg-sky-300"
+                            className="h-6 w-6 rounded-full border-light_tablewind_border_primary text-light_tablewind_accent dark:text-dark_tablewind_accent focus:light_tablewind_accent_hover dark:focus:ring-dark_tablewind_accent_hover dark:border-dark_tablewind_border_primary dark:bg-gray-800 checked:bg-light_tablewind_accent dark:checked:bg-dark_tablewind_accent"
                         />
                     </td>
                     {columns.map((col, idx) => (
                         <td
                             key={idx}
-                            className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6 dark:text-gray-100"
+                            className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-light_tablewind_text_primary sm:pl-6 dark:text-dark_tablewind_text_primary"
                         >
                             {isRowEditing(row) && col.editable
                                 ? renderEditableCell(col, row)
@@ -156,14 +169,14 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                         </td>
                     ))}
                     {anyEditable && (
-                        <td className="sticky right-0 ml-2 bg-white px-3 py-4 text-right text-sm font-medium whitespace-nowrap group-hover:bg-gray-50 dark:bg-slate-800 dark:group-hover:bg-slate-600">
+                        <td className="sticky right-0 ml-2 bg-light_tablewind_bg_primary px-3 py-4 text-right text-sm font-medium whitespace-nowrap group-hover:bg-light_tablewind_bg_primary_hover dark:bg-dark_tablewind_bg_primary dark:group-hover:bg-dark_tablewind_bg_primary_hover">
                             {isRowEditing(row) ? (
                                 <div className="flex gap-2">
                                     <button
                                         onClick={() =>
                                             onSaveEdit && onSaveEdit(row.id)
                                         }
-                                        className="mr-2 rounded bg-sky-300 px-2 py-1 text-sm font-semibold text-gray-900 hover:bg-sky-400"
+                                        className="mr-2 rounded bg-light_button_save_bg dark:bg-dark_button_save_bg px-2 py-1 text-sm font-semibold text-light_button_save_text hover:bg-light_button_save_bg_hover dark:hover:bg-dark_button_save_bg_hover dark:text-dark_button_save_text"
                                     >
                                         Save
                                     </button>
@@ -171,7 +184,7 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                                         onClick={() =>
                                             onCancelEdit && onCancelEdit()
                                         }
-                                        className="rounded bg-gray-300 px-2 py-1 text-sm font-semibold text-gray-900 hover:bg-gray-400"
+                                        className="rounded bg-light_button_cancel_bg px-2 py-1 text-sm font-semibold text-light_button_cancel_text hover:bg-light_button_cancel_bg_hover dark:bg-dark_button_cancel_bg dark:text-dark_button_cancel_text dark:hover:dark_button_cancel_bg_hover"
                                     >
                                         Cancel
                                     </button>
@@ -181,7 +194,7 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                                     <>
                                         <button
                                             onClick={() => onStartEdit(row)}
-                                            className="rounded bg-gray-300 px-2 py-1 text-sm font-semibold text-gray-900 hover:bg-gray-400"
+                                            className="rounded bg-light_button_edit_bg px-2 py-1 text-sm font-semibold text-light_button_edit_text hover:bg-light_button_edit_bg_hover dark:bg-dark_button_edit_bg dark:text-dark_button_edit_text dark:hover:dark_button_edit_bg_hover"
                                         >
                                             Edit
                                         </button>
@@ -190,7 +203,7 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                                                 onClick={() =>
                                                     handleDelete(row.id)
                                                 }
-                                                className="ml-2 rounded bg-red-500 px-2 py-1 text-sm font-semibold text-white hover:bg-red-600"
+                                                className="ml-2 rounded bg-light_button_delete_bg px-2 py-1 text-sm font-semibold text-light_button_delete_text hover:light_button_delete_bg_hover dark:bg-dark_button_delete_bg dark:text-dark_button_delete_text dark:hover:dark_button_delete_bg_hover"
                                             >
                                                 Delete
                                             </button>

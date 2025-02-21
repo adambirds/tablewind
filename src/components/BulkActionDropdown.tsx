@@ -46,7 +46,7 @@ export function BulkActionDropdown({
         <div className="relative inline-block" ref={containerRef}>
             <button
                 onClick={toggleDropdown}
-                className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                className="inline-flex justify-center rounded-md border border-light_tablewind_border_primary bg-light_tablewind_bg_primary px-4 py-2 text-sm font-medium text-light_tablewind_text_secondary hover:bg-light_tablewind_bg_primary_hover dark:border-dark_tablewind_border_primary dark:bg-gray-800 dark:text-dark_tablewind_text_secondary"
             >
                 {buttonLabel}
             </button>
@@ -54,16 +54,16 @@ export function BulkActionDropdown({
                 createPortal(
                     <div
                         style={dropdownStyle}
-                        className="rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 dark:ring-gray-700"
+                        className="rounded-md shadow-lg ring-1 ring-opacity-5 bg-light_bulk_dropdown_bg dark:bg-dark_bulk_dropdown_bg ring-light_bulk_dropdown_ring dark:ring-dark_bulk_dropdown_ring"
                     >
-                        <ul className="divide-y divide-gray-100 dark:divide-gray-700">
+                        <ul className="divide-y divide-light_bulk_dropdown_divider dark:divide-dark_bulk_dropdown_divider">
                             {actions.map((action) => (
                                 <li key={action.key}>
                                     <button
                                         onClick={() =>
                                             handleActionClick(action)
                                         }
-                                        className="group flex w-full items-center rounded-md px-2 py-2 text-left text-sm text-gray-900 hover:bg-sky-400  dark:text-gray-300 dark:hover:bg-sky-400 hover:text-gray-900 dark:hover:text-gray-900"
+                                        className="group flex w-full items-center rounded-md px-2 py-2 text-left text-sm text-light_bulk_dropdown_text dark:text-dark_bulk_dropdown_text hover:bg-light_bulk_dropdown_bg_hover dark:hover:bg-dark_bulk_dropdown_bg_hover"
                                     >
                                         {action.label}
                                     </button>
