@@ -2,11 +2,15 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.1.0] - 2025-02-23
+
+- Added ability to customise the colors of the table components.
+
 ## [v2.0.0] - 2025-02-18
 
 ### Added
 
-- Added next router as a prop to avoid app router invariant issue. 
+- Added next router as a prop to avoid app router invariant issue.
 
 ## [v1.0.5] - 2025-02-18
 

@@ -70,40 +70,41 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                         <span className="pointer-events-none relative inline-block h-5 w-5 transform rounded-full bg-light_tablewind_bg_primary shadow-sm transition duration-200 ease-in-out" />
                     </Switch>
                 );
-                case 'select':
-                    return (
-                      <select
+            case 'select':
+                return (
+                    <select
                         // Use the object's id if available, otherwise fallback to empty string.
                         value={
-                            typeof value === 'object' && value !== null && 'id' in value
-                              ? (value as { id: string | number }).id
-                              : typeof value === 'string'
-                              ? value
-                              : ''
-                          }
-                          
+                            typeof value === 'object' &&
+                            value !== null &&
+                            'id' in value
+                                ? (value as { id: string | number }).id
+                                : typeof value === 'string'
+                                  ? value
+                                  : ''
+                        }
                         onChange={(e) => {
-                          const selectedOption = col.options?.find(
-                            (opt) => String(opt.id) === e.target.value
-                          );
-                          if (setEditValues) {
-                            setEditValues((prev) => ({
-                              ...prev,
-                              [fieldKey]: selectedOption || null,
-                            }));
-                          }
+                            const selectedOption = col.options?.find(
+                                (opt) => String(opt.id) === e.target.value
+                            );
+                            if (setEditValues) {
+                                setEditValues((prev) => ({
+                                    ...prev,
+                                    [fieldKey]: selectedOption || null,
+                                }));
+                            }
                         }}
                         className="w-full rounded border bg-light_tablewind_bg_primary p-1 text-sm dark:bg-dark_tablewind_bg_primary text-light_tablewind_text_secondary dark:text-dark_tablewind_text_secondary"
-                      >
+                    >
                         <option value="">Select...</option>
                         {col.options?.map((opt) => (
-                          <option key={opt.id} value={opt.id}>
-                            {opt.name}
-                          </option>
+                            <option key={opt.id} value={opt.id}>
+                                {opt.name}
+                            </option>
                         ))}
-                      </select>
-                    );
-                  
+                    </select>
+                );
+
             case 'multi-select':
                 return (
                     <MultiSelectDropdown

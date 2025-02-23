@@ -53,18 +53,32 @@
     --default-light-button-cancel-text: theme('colors.slate-900');
 
     --default-dark-button-save-bg: var(--default-dark-tablewind-accent);
-    --default-dark-button-save-bg-hover: var(--default-dark-tablewind-accent-hover);
+    --default-dark-button-save-bg-hover: var(
+        --default-dark-tablewind-accent-hover
+    );
     --default-dark-button-save-text: var(--default-dark-tablewind-accent-text);
     --default-light-button-save-bg: var(--default-light-tablewind-accent);
-    --default-light-button-save-bg-hover: var(--default-light-tablewind-accent-hover);
-    --default-light-button-save-text: var(--default-light-tablewind-accent-text);
+    --default-light-button-save-bg-hover: var(
+        --default-light-tablewind-accent-hover
+    );
+    --default-light-button-save-text: var(
+        --default-light-tablewind-accent-text
+    );
 
     --default-dark-button-pagination-bg: var(--default-dark-tablewind-accent);
-    --default-dark-button-pagination-bg-hover: var(--default-dark-tablewind-accent-hover);
-    --default-dark-button-pagination-text: var(--default-dark-tablewind-accent-text);
+    --default-dark-button-pagination-bg-hover: var(
+        --default-dark-tablewind-accent-hover
+    );
+    --default-dark-button-pagination-text: var(
+        --default-dark-tablewind-accent-text
+    );
     --default-light-button-pagination-bg: var(--default-light-tablewind-accent);
-    --default-light-button-pagination-bg-hover: var(--default-light-tablewind-accent-hover);
-    --default-light-button-pagination-text: var(--default-light-tablewind-accent-text);
+    --default-light-button-pagination-bg-hover: var(
+        --default-light-tablewind-accent-hover
+    );
+    --default-light-button-pagination-text: var(
+        --default-light-tablewind-accent-text
+    );
     --default-dark-button-pagination-disabled-bg: theme('colors.slate.400');
     --default-dark-button-pagination-disabled-text: theme('colors.slate.800');
     --default-light-button-pagination-disabled-bg: theme('colors.slate.400');
@@ -111,115 +125,385 @@
     --default-light-multi-select-item-bg: var(--default-light-tablewind-accent);
     --default-light-multi-select-item-text: theme('colors.slate.800');
 }
-  
+
 @theme {
-    --color-dark_tablewind_accent: var(--dark-tablewind-accent, var(--default-dark-tablewind-accent));
-    --color-dark_tablewind_accent_hover: var(--dark-tablewind-accent-hover, var(--default-dark-tablewind-accent-hover));
-    --color-light_tablewind_accent: var(--light-tablewind-accent, var(--default-light-tablewind-accent));
-    --color-light_tablewind_accent_hover: var(--light-tablewind-accent-hover, var(--default-light-tablewind-accent-hover));
+    --color-dark_tablewind_accent: var(
+        --dark-tablewind-accent,
+        var(--default-dark-tablewind-accent)
+    );
+    --color-dark_tablewind_accent_hover: var(
+        --dark-tablewind-accent-hover,
+        var(--default-dark-tablewind-accent-hover)
+    );
+    --color-light_tablewind_accent: var(
+        --light-tablewind-accent,
+        var(--default-light-tablewind-accent)
+    );
+    --color-light_tablewind_accent_hover: var(
+        --light-tablewind-accent-hover,
+        var(--default-light-tablewind-accent-hover)
+    );
 
-    --color-dark_tablewind_text_primary: var(--dark-tablewind-text-primary, var(--default-dark-tablewind-text-primary));
-    --color-dark_tablewind_text_secondary: var(--dark-tablewind-text-secondary, var(--default-dark-tablewind-text-secondary));
-    --color-light_tablewind_text_primary: var(--light-tablewind-text-primary, var(--default-light-tablewind-text-primary));
-    --color-light_tablewind_text_secondary: var(--light-tablewind-text-secondary, var(--default-light-tablewind-text-secondary));
+    --color-dark_tablewind_text_primary: var(
+        --dark-tablewind-text-primary,
+        var(--default-dark-tablewind-text-primary)
+    );
+    --color-dark_tablewind_text_secondary: var(
+        --dark-tablewind-text-secondary,
+        var(--default-dark-tablewind-text-secondary)
+    );
+    --color-light_tablewind_text_primary: var(
+        --light-tablewind-text-primary,
+        var(--default-light-tablewind-text-primary)
+    );
+    --color-light_tablewind_text_secondary: var(
+        --light-tablewind-text-secondary,
+        var(--default-light-tablewind-text-secondary)
+    );
 
-    --color-dark_tablewind_border_primary: var(--dark-tablewind-border-primary, var(--default-dark-tablewind-border-primary));
-    --color-light_tablewind_border_primary: var(--light-tablewind-border-primary, var(--default-light-tablewind-border-primary));
+    --color-dark_tablewind_border_primary: var(
+        --dark-tablewind-border-primary,
+        var(--default-dark-tablewind-border-primary)
+    );
+    --color-light_tablewind_border_primary: var(
+        --light-tablewind-border-primary,
+        var(--default-light-tablewind-border-primary)
+    );
 
-    --color-dark_tablewind_bg_primary: var(--dark-tablewind-bg-primary, var(--default-dark-tablewind-bg-primary));
-    --color-dark_tablewind_bg_primary_hover: var(--dark-tablewind-bg-primary-hover, var(--default-dark-tablewind-bg-primary-hover));
-    --color-light_tablewind_bg_primary: var(--light-tablewind-bg-primary, var(--default-light-tablewind-bg-primary));
-    --color-light_tablewind_bg_primary_hover: var(--light-tablewind-bg-primary-hover, var(--default-light-tablewind-bg-primary-hover));
+    --color-dark_tablewind_bg_primary: var(
+        --dark-tablewind-bg-primary,
+        var(--default-dark-tablewind-bg-primary)
+    );
+    --color-dark_tablewind_bg_primary_hover: var(
+        --dark-tablewind-bg-primary-hover,
+        var(--default-dark-tablewind-bg-primary-hover)
+    );
+    --color-light_tablewind_bg_primary: var(
+        --light-tablewind-bg-primary,
+        var(--default-light-tablewind-bg-primary)
+    );
+    --color-light_tablewind_bg_primary_hover: var(
+        --light-tablewind-bg-primary-hover,
+        var(--default-light-tablewind-bg-primary-hover)
+    );
 
-    --color-dark_success_alert_bg: var(--dark-success-alert-bg, var(--default-dark-success-alert-bg));
-    --color-dark_success_alert_text: var(--dark-success-alert-text, var(--default-dark-success-alert-text));
-    --color-light_success_alert_bg: var(--light-success-alert-bg, var(--default-light-success-alert-bg));
-    --color-light_success_alert_text: var(--light-success-alert-text, var(--default-light-success-alert-text));
+    --color-dark_success_alert_bg: var(
+        --dark-success-alert-bg,
+        var(--default-dark-success-alert-bg)
+    );
+    --color-dark_success_alert_text: var(
+        --dark-success-alert-text,
+        var(--default-dark-success-alert-text)
+    );
+    --color-light_success_alert_bg: var(
+        --light-success-alert-bg,
+        var(--default-light-success-alert-bg)
+    );
+    --color-light_success_alert_text: var(
+        --light-success-alert-text,
+        var(--default-light-success-alert-text)
+    );
 
-    --color-dark_reset_filters_bg: var(--dark-reset-filters-bg, var(--default-dark-reset-filters-bg));
-    --color-dark_reset_filters_bg_hover: var(--dark-reset-filters-bg-hover, var(--default-dark-reset-filters-bg-hover));
-    --color-dark_reset_filters_text: var(--dark-reset-filters-text, var(--default-dark-reset-filters-text));
-    --color-light_reset_filters_bg: var(--light-reset-filters-bg, var(--default-light-reset-filters-bg));
-    --color-light_reset_filters_bg_hover: var(--light-reset-filters-bg-hover, var(--default-light-reset-filters-bg-hover));
-    --color-light_reset_filters_text: var(--light-reset-filters-text, var(--default-light-reset-filters-text));
+    --color-dark_reset_filters_bg: var(
+        --dark-reset-filters-bg,
+        var(--default-dark-reset-filters-bg)
+    );
+    --color-dark_reset_filters_bg_hover: var(
+        --dark-reset-filters-bg-hover,
+        var(--default-dark-reset-filters-bg-hover)
+    );
+    --color-dark_reset_filters_text: var(
+        --dark-reset-filters-text,
+        var(--default-dark-reset-filters-text)
+    );
+    --color-light_reset_filters_bg: var(
+        --light-reset-filters-bg,
+        var(--default-light-reset-filters-bg)
+    );
+    --color-light_reset_filters_bg_hover: var(
+        --light-reset-filters-bg-hover,
+        var(--default-light-reset-filters-bg-hover)
+    );
+    --color-light_reset_filters_text: var(
+        --light-reset-filters-text,
+        var(--default-light-reset-filters-text)
+    );
 
-    --color-dark_button_delete_bg: var(--dark-button-delete-bg, var(--default-dark-button-delete-bg));
-    --color-dark_button_delete_bg_hover: var(--dark-button-delete-bg-hover, var(--default-dark-button-delete-bg-hover));
-    --color-dark_button_delete_text: var(--dark-button-delete-text, var(--default-dark-button-delete-text));
-    --color-light_button_delete_bg: var(--light-button-delete-bg, var(--default-light-button-delete-bg));
-    --color-light_button_delete_bg_hover: var(--light-button-delete-bg-hover, var(--default-light-button-delete-bg-hover));
-    --color-light_button_delete_text: var(--light-button-delete-text, var(--default-light-button-delete-text));
+    --color-dark_button_delete_bg: var(
+        --dark-button-delete-bg,
+        var(--default-dark-button-delete-bg)
+    );
+    --color-dark_button_delete_bg_hover: var(
+        --dark-button-delete-bg-hover,
+        var(--default-dark-button-delete-bg-hover)
+    );
+    --color-dark_button_delete_text: var(
+        --dark-button-delete-text,
+        var(--default-dark-button-delete-text)
+    );
+    --color-light_button_delete_bg: var(
+        --light-button-delete-bg,
+        var(--default-light-button-delete-bg)
+    );
+    --color-light_button_delete_bg_hover: var(
+        --light-button-delete-bg-hover,
+        var(--default-light-button-delete-bg-hover)
+    );
+    --color-light_button_delete_text: var(
+        --light-button-delete-text,
+        var(--default-light-button-delete-text)
+    );
 
-    --color-dark_button_edit_bg: var(--dark-button-edit-bg, var(--default-dark-button-edit-bg));
-    --color-dark_button_edit_bg_hover: var(--dark-button-edit-bg-hover, var(--default-dark-button-edit-bg-hover));
-    --color-dark_button_edit_text: var(--dark-button-edit-text, var(--default-dark-button-edit-text));
-    --color-light_button_edit_bg: var(--light-button-edit-bg, var(--default-light-button-edit-bg));
-    --color-light_button_edit_bg_hover: var(--light-button-edit-bg-hover, var(--default-light-button-edit-bg-hover));
-    --color-light_button_edit_text: var(--light-button-edit-text, var(--default-light-button-edit-text));
+    --color-dark_button_edit_bg: var(
+        --dark-button-edit-bg,
+        var(--default-dark-button-edit-bg)
+    );
+    --color-dark_button_edit_bg_hover: var(
+        --dark-button-edit-bg-hover,
+        var(--default-dark-button-edit-bg-hover)
+    );
+    --color-dark_button_edit_text: var(
+        --dark-button-edit-text,
+        var(--default-dark-button-edit-text)
+    );
+    --color-light_button_edit_bg: var(
+        --light-button-edit-bg,
+        var(--default-light-button-edit-bg)
+    );
+    --color-light_button_edit_bg_hover: var(
+        --light-button-edit-bg-hover,
+        var(--default-light-button-edit-bg-hover)
+    );
+    --color-light_button_edit_text: var(
+        --light-button-edit-text,
+        var(--default-light-button-edit-text)
+    );
 
-    --color-dark_button_cancel_bg: var(--dark-button-cancel-bg, var(--default-dark-button-cancel-bg));
-    --color-dark_button_cancel_bg_hover: var(--dark-button-cancel-bg-hover, var(--default-dark-button-cancel-bg-hover));
-    --color-dark_button_cancel_text: var(--dark-button-cancel-text, var(--default-dark-button-cancel-text));
-    --color-light_button_cancel_bg: var(--light-button-cancel-bg, var(--default-light-button-cancel-bg));
-    --color-light_button_cancel_bg_hover: var(--light-button-cancel-bg-hover, var(--default-light-button-cancel-bg-hover));
-    --color-light_button_cancel_text: var(--light-button-cancel-text, var(--default-light-button-cancel-text));
+    --color-dark_button_cancel_bg: var(
+        --dark-button-cancel-bg,
+        var(--default-dark-button-cancel-bg)
+    );
+    --color-dark_button_cancel_bg_hover: var(
+        --dark-button-cancel-bg-hover,
+        var(--default-dark-button-cancel-bg-hover)
+    );
+    --color-dark_button_cancel_text: var(
+        --dark-button-cancel-text,
+        var(--default-dark-button-cancel-text)
+    );
+    --color-light_button_cancel_bg: var(
+        --light-button-cancel-bg,
+        var(--default-light-button-cancel-bg)
+    );
+    --color-light_button_cancel_bg_hover: var(
+        --light-button-cancel-bg-hover,
+        var(--default-light-button-cancel-bg-hover)
+    );
+    --color-light_button_cancel_text: var(
+        --light-button-cancel-text,
+        var(--default-light-button-cancel-text)
+    );
 
-    --color-dark_button_save_bg: var(--dark-button-save-bg, var(--default-dark-button-save-bg));
-    --color-dark_button_save_bg_hover: var(--dark-button-save-bg-hover, var(--default-dark-button-save-bg-hover));
-    --color-dark_button_save_text: var(--dark-button-save-text, var(--default-dark-button-save-text));
-    --color-light_button_save_bg: var(--light-button-save-bg, var(--default-light-button-save-bg));
-    --color-light_button_save_bg_hover: var(--light-button-save-bg-hover, var(--default-light-button-save-bg-hover));
-    --color-light_button_save_text: var(--light-button-save-text, var(--default-light-button-save-text));
+    --color-dark_button_save_bg: var(
+        --dark-button-save-bg,
+        var(--default-dark-button-save-bg)
+    );
+    --color-dark_button_save_bg_hover: var(
+        --dark-button-save-bg-hover,
+        var(--default-dark-button-save-bg-hover)
+    );
+    --color-dark_button_save_text: var(
+        --dark-button-save-text,
+        var(--default-dark-button-save-text)
+    );
+    --color-light_button_save_bg: var(
+        --light-button-save-bg,
+        var(--default-light-button-save-bg)
+    );
+    --color-light_button_save_bg_hover: var(
+        --light-button-save-bg-hover,
+        var(--default-light-button-save-bg-hover)
+    );
+    --color-light_button_save_text: var(
+        --light-button-save-text,
+        var(--default-light-button-save-text)
+    );
 
-    --color-dark_button_pagination_bg: var(--dark-button-pagination-bg, var(--default-dark-button-pagination-bg));
-    --color-dark_button_pagination_bg_hover: var(--dark-button-pagination-bg-hover, var(--default-dark-button-pagination-bg-hover));
-    --color-dark_button_pagination_text: var(--dark-button-pagination-text, var(--default-dark-button-pagination-text));
-    --color-light_button_pagination_bg: var(--light-button-pagination-bg, var(--default-light-button-pagination-bg));
-    --color-light_button_pagination_bg_hover: var(--light-button-pagination-bg-hover, var(--default-light-button-pagination-bg-hover));
-    --color-light_button_pagination_text: var(--light-button-pagination-text, var(--default-light-button-pagination-text));
-    --color-dark_button_pagination_disabled_bg: var(--dark-button-pagination-disabled-bg, var(--default-dark-button-pagination-disabled-bg));
-    --color-dark_button_pagination_disabled_text: var(--dark-button-pagination-disabled-text, var(--default-dark-button-pagination-disabled-text));
-    --color-light_button_pagination_disabled_bg: var(--light-button-pagination-disabled-bg, var(--default-light-button-pagination-disabled-bg));
-    --color-light_button_pagination_disabled_text: var(--light-button-pagination-disabled-text, var(--default-light-button-pagination-disabled-text));
+    --color-dark_button_pagination_bg: var(
+        --dark-button-pagination-bg,
+        var(--default-dark-button-pagination-bg)
+    );
+    --color-dark_button_pagination_bg_hover: var(
+        --dark-button-pagination-bg-hover,
+        var(--default-dark-button-pagination-bg-hover)
+    );
+    --color-dark_button_pagination_text: var(
+        --dark-button-pagination-text,
+        var(--default-dark-button-pagination-text)
+    );
+    --color-light_button_pagination_bg: var(
+        --light-button-pagination-bg,
+        var(--default-light-button-pagination-bg)
+    );
+    --color-light_button_pagination_bg_hover: var(
+        --light-button-pagination-bg-hover,
+        var(--default-light-button-pagination-bg-hover)
+    );
+    --color-light_button_pagination_text: var(
+        --light-button-pagination-text,
+        var(--default-light-button-pagination-text)
+    );
+    --color-dark_button_pagination_disabled_bg: var(
+        --dark-button-pagination-disabled-bg,
+        var(--default-dark-button-pagination-disabled-bg)
+    );
+    --color-dark_button_pagination_disabled_text: var(
+        --dark-button-pagination-disabled-text,
+        var(--default-dark-button-pagination-disabled-text)
+    );
+    --color-light_button_pagination_disabled_bg: var(
+        --light-button-pagination-disabled-bg,
+        var(--default-light-button-pagination-disabled-bg)
+    );
+    --color-light_button_pagination_disabled_text: var(
+        --light-button-pagination-disabled-text,
+        var(--default-light-button-pagination-disabled-text)
+    );
 
-    --color-dark_pagination_text: var(--dark-pagination-text, var(--default-dark-pagination-text));
-    --color-light_pagination_text: var(--light-pagination-text, var(--default-light-pagination-text));
+    --color-dark_pagination_text: var(
+        --dark-pagination-text,
+        var(--default-dark-pagination-text)
+    );
+    --color-light_pagination_text: var(
+        --light-pagination-text,
+        var(--default-light-pagination-text)
+    );
 
-    --color-dark_switch_bg: var(--dark-switch-bg, var(--default-dark-switch-bg));
-    --color-light_switch_bg: var(--light-switch-bg, var(--default-light-switch-bg));
+    --color-dark_switch_bg: var(
+        --dark-switch-bg,
+        var(--default-dark-switch-bg)
+    );
+    --color-light_switch_bg: var(
+        --light-switch-bg,
+        var(--default-light-switch-bg)
+    );
 
-    --color-dark_show_filters_bg: var(--dark-show-filters-bg, var(--default-dark-show-filters-bg));
-    --color-dark_show_filters_bg_hover: var(--dark-show-filters-bg-hover, var(--default-dark-show-filters-bg-hover));
-    --color-dark_show_filters_text: var(--dark-show-filters-text, var(--default-dark-show-filters-text));
-    --color-light_show_filters_bg: var(--light-show-filters-bg, var(--default-light-show-filters-bg));
-    --color-light_show_filters_bg_hover: var(--light-show-filters-bg-hover, var(--default-light-show-filters-bg-hover));
-    --color-light_show_filters_text: var(--light-show-filters-text, var(--default-light-show-filters-text));
+    --color-dark_show_filters_bg: var(
+        --dark-show-filters-bg,
+        var(--default-dark-show-filters-bg)
+    );
+    --color-dark_show_filters_bg_hover: var(
+        --dark-show-filters-bg-hover,
+        var(--default-dark-show-filters-bg-hover)
+    );
+    --color-dark_show_filters_text: var(
+        --dark-show-filters-text,
+        var(--default-dark-show-filters-text)
+    );
+    --color-light_show_filters_bg: var(
+        --light-show-filters-bg,
+        var(--default-light-show-filters-bg)
+    );
+    --color-light_show_filters_bg_hover: var(
+        --light-show-filters-bg-hover,
+        var(--default-light-show-filters-bg-hover)
+    );
+    --color-light_show_filters_text: var(
+        --light-show-filters-text,
+        var(--default-light-show-filters-text)
+    );
 
-    --color-dark_header_bg: var(--dark-header-bg, var(--default-dark-header-bg));
-    --color-light_header_bg: var(--light-header-bg, var(--default-light-header-bg));
+    --color-dark_header_bg: var(
+        --dark-header-bg,
+        var(--default-dark-header-bg)
+    );
+    --color-light_header_bg: var(
+        --light-header-bg,
+        var(--default-light-header-bg)
+    );
 
-    --color-dark_table_divider: var(--dark-table-divider, var(--default-dark-table-divider));
-    --color-light_table_divider: var(--light-table-divider, var(--default-light-table-divider));
+    --color-dark_table_divider: var(
+        --dark-table-divider,
+        var(--default-dark-table-divider)
+    );
+    --color-light_table_divider: var(
+        --light-table-divider,
+        var(--default-light-table-divider)
+    );
 
-    --color-dark_table_header_bg: var(--dark-table-header-bg, var(--default-dark-table-header-bg));
-    --color-light_table_header_bg: var(--light-table-header-bg, var(--default-light-table-header-bg));
+    --color-dark_table_header_bg: var(
+        --dark-table-header-bg,
+        var(--default-dark-table-header-bg)
+    );
+    --color-light_table_header_bg: var(
+        --light-table-header-bg,
+        var(--default-light-table-header-bg)
+    );
 
-    --color-dark_header_ring: var(--dark-header-ring, var(--default-dark-header-ring));
-    --color-light_header_ring: var(--light-header-ring, var(--default-light-header-ring));
+    --color-dark_header_ring: var(
+        --dark-header-ring,
+        var(--default-dark-header-ring)
+    );
+    --color-light_header_ring: var(
+        --light-header-ring,
+        var(--default-light-header-ring)
+    );
 
-    --color-dark_bulk_dropdown_bg: var(--dark-bulk-dropdown-bg, var(--default-dark-bulk-dropdown-bg));
-    --color-dark_bulk_dropdown_bg_hover: var(--dark-bulk-dropdown-bg-hover, var(--default-dark-bulk-dropdown-bg-hover));
-    --color-dark_bulk_dropdown_text: var(--dark-bulk-dropdown-text, var(--default-dark-bulk-dropdown-text));
-    --color-dark_bulk_dropdown_ring: var(--dark-bulk-dropdown-ring, var(--default-dark-bulk-dropdown-ring));
-    --color-dark_bulk_dropdown_divider: var(--dark-bulk-dropdown-divider, var(--default-dark-bulk-dropdown-divider));
-    --color-light_bulk_dropdown_bg: var(--light-bulk-dropdown-bg, var(--default-light-bulk-dropdown-bg));
-    --color-light_bulk_dropdown_bg_hover: var(--light-bulk-dropdown-bg-hover, var(--default-light-bulk-dropdown-bg-hover));
-    --color-light_bulk_dropdown_text: var(--light-bulk-dropdown-text, var(--default-light-bulk-dropdown-text));
-    --color-light_bulk_dropdown_ring: var(--light-bulk-dropdown-ring, var(--default-light-bulk-dropdown-ring));
-    --color-light_bulk_dropdown_divider: var(--light-bulk-dropdown-divider, var(--default-light-bulk-dropdown-divider));
+    --color-dark_bulk_dropdown_bg: var(
+        --dark-bulk-dropdown-bg,
+        var(--default-dark-bulk-dropdown-bg)
+    );
+    --color-dark_bulk_dropdown_bg_hover: var(
+        --dark-bulk-dropdown-bg-hover,
+        var(--default-dark-bulk-dropdown-bg-hover)
+    );
+    --color-dark_bulk_dropdown_text: var(
+        --dark-bulk-dropdown-text,
+        var(--default-dark-bulk-dropdown-text)
+    );
+    --color-dark_bulk_dropdown_ring: var(
+        --dark-bulk-dropdown-ring,
+        var(--default-dark-bulk-dropdown-ring)
+    );
+    --color-dark_bulk_dropdown_divider: var(
+        --dark-bulk-dropdown-divider,
+        var(--default-dark-bulk-dropdown-divider)
+    );
+    --color-light_bulk_dropdown_bg: var(
+        --light-bulk-dropdown-bg,
+        var(--default-light-bulk-dropdown-bg)
+    );
+    --color-light_bulk_dropdown_bg_hover: var(
+        --light-bulk-dropdown-bg-hover,
+        var(--default-light-bulk-dropdown-bg-hover)
+    );
+    --color-light_bulk_dropdown_text: var(
+        --light-bulk-dropdown-text,
+        var(--default-light-bulk-dropdown-text)
+    );
+    --color-light_bulk_dropdown_ring: var(
+        --light-bulk-dropdown-ring,
+        var(--default-light-bulk-dropdown-ring)
+    );
+    --color-light_bulk_dropdown_divider: var(
+        --light-bulk-dropdown-divider,
+        var(--default-light-bulk-dropdown-divider)
+    );
 
-    --color-dark_multi_select_item_bg: var(--dark-multi-select-item-bg, var(--default-dark-multi-select-item-bg));
-    --color-dark_multi_select_item_text: var(--dark-multi-select-item-text, var(--default-dark-multi-select-item-text));
-    --color-light_multi_select_item_bg: var(--light-multi-select-item-bg, var(--default-light-multi-select-item-bg));
-    --color-light_multi_select_item_text: var(--light-multi-select-item-text, var(--default-light-multi-select-item-text));
+    --color-dark_multi_select_item_bg: var(
+        --dark-multi-select-item-bg,
+        var(--default-dark-multi-select-item-bg)
+    );
+    --color-dark_multi_select_item_text: var(
+        --dark-multi-select-item-text,
+        var(--default-dark-multi-select-item-text)
+    );
+    --color-light_multi_select_item_bg: var(
+        --light-multi-select-item-bg,
+        var(--default-light-multi-select-item-bg)
+    );
+    --color-light_multi_select_item_text: var(
+        --light-multi-select-item-text,
+        var(--default-light-multi-select-item-text)
+    );
 }

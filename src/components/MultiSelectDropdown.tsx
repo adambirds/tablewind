@@ -89,7 +89,9 @@ export function MultiSelectDropdown({
                 className="flex w-full cursor-pointer flex-wrap items-center gap-1 rounded-md border border-light_tablewind_border_primary bg-light_tablewind_bg_primary px-3 py-2 text-sm text-light_tablewind_text_secondary shadow-sm focus:outline-none dark:border-dark_tablewind_border_primary dark:bg-dark_tablewind_bg_primary dark:dark_tablewind_text_secondary"
             >
                 {selected.length === 0 ? (
-                    <span className="text-light_tablewind_text_primary dark:text-dark_tablewind_text_primary">Select Tags...</span>
+                    <span className="text-light_tablewind_text_primary dark:text-dark_tablewind_text_primary">
+                        Select Tags...
+                    </span>
                 ) : (
                     selected.map((id) => {
                         const option = options.find((opt) => opt.id === id);

@@ -2,7 +2,8 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import DataTableBase, { DataTableComponentProps } from './components/DataTable';
 
-interface DataTablePropsWithRouter<T extends { id: string }> extends DataTableComponentProps<T> {
+interface DataTablePropsWithRouter<T extends { id: string }>
+    extends DataTableComponentProps<T> {
     router: ReturnType<typeof useRouter>; // Expect router to be passed as a prop
 }
 
