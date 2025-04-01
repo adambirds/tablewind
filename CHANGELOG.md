@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.2.0] - 2025-04-01
+
+- Pass navigate function to datatable as a prop.
+
 ## [v2.1.0] - 2025-02-23
 
 - Added ability to customise the colors of the table components.
