@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.2.4] - 2025-04-14
+
+- Remove more padding from filter bar so it can be handled by the user.
+
 ## [v2.2.3] - 2025-04-14
 
 - Remove padding from filter bar so it can be handled by the user.
