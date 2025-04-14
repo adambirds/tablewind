@@ -94,6 +94,7 @@ function MyPage() {
 - **endpoint**: The API endpoint to fetch data.
 - **columns**: An array of column configuration objects.
 - **fetcher**: A function to fetch data (e.g., `fetch` or a custom function).
+- **addNewUrl** (optional): The relative path/url to redirect to when add mew button clicked.
 - **initialQuery** (optional): An object containing initial query parameters.
 - **onRowSelect** (optional): Callback invoked when rows are selected.
 - **filterFields** (optional): An array defining filter fields.

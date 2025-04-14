@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.3.0] - 2025-04-14
+
+- Added new optional prop for `addNewUrl`. If this prop isn't set the button will not show.
+
 ## [v2.2.4] - 2025-04-14
 
 - Remove more padding from filter bar so it can be handled by the user.
