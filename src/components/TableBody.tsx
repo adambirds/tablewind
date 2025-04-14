@@ -139,7 +139,7 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                     key={row.id}
                     className="group hover:bg-light_tablewind_bg_primary_hover dark:hover:bg-dark_tablewind_bg_primary_hover"
                 >
-                    <td className="sticky left-0 bg-light_tablewind_bg_primary pl-3 group-hover:bg-light_tablewind_bg_primary_hover dark:bg-dark_tablewind_bg_primary dark:group-hover:bg-dark_tablewind_bg_primary_hover">
+                    <td className="sticky text-center left-0 bg-light_tablewind_bg_primary pl-2 group-hover:bg-light_tablewind_bg_primary_hover dark:bg-dark_tablewind_bg_primary dark:group-hover:bg-dark_tablewind_bg_primary_hover">
                         <input
                             type="checkbox"
                             checked={selectedIds.includes(row.id)}
