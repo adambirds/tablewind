@@ -16,7 +16,6 @@ interface TableBodyProps<T> {
     onSaveEdit?: (id: string) => void;
     onCancelEdit?: () => void;
     onStartEdit?: (row: T) => void;
-    className?: string;
     handleDelete?: (id: string) => void;
 }
 
@@ -31,7 +30,6 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
     onSaveEdit,
     onCancelEdit,
     onStartEdit,
-    className = 'divide-y divide-light_table_divider bg-light_tablewind_bg_primary dark:bg-dark_tablewind_bg_primary dark:divide-dark_table_divider',
     handleDelete,
 }: TableBodyProps<T>) {
     const renderEditableCell = (col: ColumnConfig<T>, _row: T) => {
@@ -64,7 +62,7 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                                 [fieldKey]: value,
                             }))
                         }
-                        className="group relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-light_switch_bg dark:bg-dark_switch_bg transition-colors duration-200 ease-in-out data-checked:bg-light_tablewind_accent dark:data-checked:bg-dark_tablewind_accent "
+                        className="group relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-light_switch_bg dark:bg-dark_switch_bg transition-colors duration-200 ease-in-out data-checked:bg-light_tablewind_accent dark:data-checked:bg-dark_tablewind_accent"
                     >
                         <span className="sr-only">Toggle</span>
                         <span className="pointer-events-none relative inline-block h-5 w-5 transform rounded-full bg-light_tablewind_bg_primary shadow-sm transition duration-200 ease-in-out" />
@@ -73,7 +71,6 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
             case 'select':
                 return (
                     <select
-                        // Use the object's id if available, otherwise fallback to empty string.
                         value={
                             typeof value === 'object' &&
                             value !== null &&
@@ -104,7 +101,6 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                         ))}
                     </select>
                 );
-
             case 'multi-select':
                 return (
                     <MultiSelectDropdown
@@ -133,11 +129,15 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
     const anyEditable = columns.some((col) => col.editable);
 
     return (
-        <tbody className={className}>
-            {data.map((row) => (
+        <tbody className="bg-light_tablewind_bg_primary dark:bg-dark_tablewind_bg_primary">
+            {data.map((row, rowIndex) => (
                 <tr
                     key={row.id}
-                    className="group hover:bg-light_tablewind_bg_primary_hover dark:hover:bg-dark_tablewind_bg_primary_hover"
+                    className={`group hover:bg-light_tablewind_bg_primary_hover dark:hover:bg-dark_tablewind_bg_primary_hover ${
+                        rowIndex !== data.length - 1
+                            ? 'border-b-2 border-light_table_divider dark:border-dark_table_divider'
+                            : ''
+                    }`}
                 >
                     <td className="sticky text-center left-0 bg-light_tablewind_bg_primary pl-2 group-hover:bg-light_tablewind_bg_primary_hover dark:bg-dark_tablewind_bg_primary dark:group-hover:bg-dark_tablewind_bg_primary_hover">
                         <input

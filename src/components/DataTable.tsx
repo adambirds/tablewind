@@ -491,7 +491,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                         maxHeight: `calc(100vh - (var(--total-subtraction) * 2) - ${extraContentHeight}px - ${paginationHeight}px)`,
                     }}
                 >
-                    <table className="min-w-full divide-y divide-dark_table_divider dark:divide-dark_table_divider bg-light_header_bg dark:bg-dark_header_bg">
+                    <table className="min-w-full bg-light_header_bg dark:bg-dark_header_bg">
                         <TableHeader
                             columns={columns}
                             onSort={handleSort}
