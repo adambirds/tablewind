@@ -371,7 +371,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
 
     const filterContent = (
         <div>
-            <div ref={extraContentRef} className="pt-4">
+            <div ref={extraContentRef} className="">
                 <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between">
                     <div className="non-sticky-wrapper">
                         <div className="sticky left-0 text-left">
