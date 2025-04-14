@@ -29,6 +29,7 @@ export type DataTableComponentProps<
 export function DataTable<T extends { id: string } & Record<string, unknown>>({
     pageTitle,
     pageSubtitle,
+    addNewUrl,
     endpoint,
     columns,
     initialQuery = {},
@@ -418,12 +419,15 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                                     </option>
                                 ))}
                             </select>
-                            <button
-                                onClick={() => nav('/dashboard/posts/new')}
-                                className="rounded-md bg-light_tablewind_accent dark:bg-dark_tablewind_accent px-4 py-2 text-sm font-semibold text-light_tablewind_text_primary shadow-sm dark:hover:bg-dark_tablewind_accent_hover hover:light_tablewind_accent_hover"
-                            >
-                                Add New
-                            </button>
+                            {/* Only show if addNewUrl is set. */}
+                            {addNewUrl && (
+                                <button
+                                    onClick={() => nav(addNewUrl)}
+                                    className="rounded-md bg-light_tablewind_accent dark:bg-dark_tablewind_accent px-4 py-2 text-sm font-semibold text-light_tablewind_text_primary shadow-sm dark:hover:bg-dark_tablewind_accent_hover hover:light_tablewind_accent_hover"
+                                >
+                                    Add New
+                                </button>
+                            )}
                             <button
                                 onClick={toggleFilters}
                                 className="rounded-md px-3 py-2 text-sm font-medium bg-light_show_filters_bg text-light_show_filters_text hover:bg-light_show_filters_bg_hover dark:bg-dark_show_filters_bg dark:text-dark_show_filters_text dark:hover:bg-dark_show_filters_bg_hover"

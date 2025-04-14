@@ -56,6 +56,8 @@ export interface DataTableProps<T> {
     pageTitle?: string;
     /** The subtitle of the page */
     pageSubtitle?: string;
+    /** The URL to redirect to when the add button is clicked */
+    addNewUrl?: string;
     /** The API endpoint to fetch data from */
     endpoint: string;
     /** Column definitions */
