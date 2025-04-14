@@ -480,7 +480,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     if (!data) return null;
 
     return (
-        <div className={`px-6 ${className || ''}`}>
+        <div className={`${className || ''}`}>
             <div>
                 <div className="sticky top-0 pb-4 bg-light_header_bg dark:bg-dark_header_bg">
                     {filterContent}
