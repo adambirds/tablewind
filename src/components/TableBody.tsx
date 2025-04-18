@@ -72,22 +72,23 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                 return (
                     <select
                         value={
-                            typeof value === 'object' &&
-                            value !== null &&
-                            'id' in value
-                                ? (value as { id: string | number }).id
+                            value && typeof value === 'object' && 'id' in value
+                                ? String(value.id)
                                 : typeof value === 'string'
-                                  ? value
-                                  : ''
+                                    ? value
+                                    : ''
                         }
                         onChange={(e) => {
-                            const selectedOption = col.options?.find(
-                                (opt) => String(opt.id) === e.target.value
-                            );
+                            const selectedValue = e.target.value;
+                            const selectedOption =
+                                selectedValue === ''
+                                    ? null
+                                    : col.options?.find((opt) => String(opt.id) === selectedValue);
+            
                             if (setEditValues) {
                                 setEditValues((prev) => ({
                                     ...prev,
-                                    [fieldKey]: selectedOption || null,
+                                    [fieldKey]: selectedOption,
                                 }));
                             }
                         }}
