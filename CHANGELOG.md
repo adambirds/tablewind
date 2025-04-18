@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.3.3] - 2025-04-18
+
+### Fixed
+
+- Reverted the changes to `Select...` as it wasn't a library issue.
+
 ## [v2.3.2] - 2025-04-18
 
 ### Fixed
