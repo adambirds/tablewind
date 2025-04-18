@@ -25,7 +25,7 @@ export interface ColumnConfig<T> {
     render?: (row: T) => React.ReactNode;
     // New properties for inline editing:
     editable?: boolean;
-    inputType?: 'text' | 'checkbox' | 'select' | 'multi-select';
+    inputType?: 'text' | 'checkbox' | 'select' | 'multi-select' | 'datetime';
     options?: Array<{ id: string; name: string }>;
 }
 
