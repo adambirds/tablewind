@@ -74,8 +74,8 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                         value={
                             value && typeof value === 'object' && 'id' in value
                                 ? String(value.id)
-                                : typeof value === 'string'
-                                    ? value
+                                : typeof value === 'string' || typeof value === 'number'
+                                    ? String(value)
                                     : ''
                         }
                         onChange={(e) => {
@@ -96,7 +96,7 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                     >
                         <option value="">Select...</option>
                         {col.options?.map((opt) => (
-                            <option key={opt.id} value={opt.id}>
+                            <option key={opt.id} value={String(opt.id)}>
                                 {opt.name}
                             </option>
                         ))}
