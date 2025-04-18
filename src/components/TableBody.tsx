@@ -72,23 +72,22 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                 return (
                     <select
                         value={
-                            value && typeof value === 'object' && 'id' in value
-                                ? String(value.id)
-                                : typeof value === 'string' || typeof value === 'number'
-                                    ? String(value)
-                                    : ''
+                            typeof value === 'object' &&
+                            value !== null &&
+                            'id' in value
+                                ? (value as { id: string | number }).id
+                                : typeof value === 'string'
+                                  ? value
+                                  : ''
                         }
                         onChange={(e) => {
-                            const selectedValue = e.target.value;
-                            const selectedOption =
-                                selectedValue === ''
-                                    ? null
-                                    : col.options?.find((opt) => String(opt.id) === selectedValue);
-            
+                            const selectedOption = col.options?.find(
+                                (opt) => String(opt.id) === e.target.value
+                            );
                             if (setEditValues) {
                                 setEditValues((prev) => ({
                                     ...prev,
-                                    [fieldKey]: selectedOption,
+                                    [fieldKey]: selectedOption || null,
                                 }));
                             }
                         }}
@@ -96,7 +95,7 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                     >
                         <option value="">Select...</option>
                         {col.options?.map((opt) => (
-                            <option key={opt.id} value={String(opt.id)}>
+                            <option key={opt.id} value={opt.id}>
                                 {opt.name}
                             </option>
                         ))}
