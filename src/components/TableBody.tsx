@@ -81,13 +81,20 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                                   : ''
                         }
                         onChange={(e) => {
-                            const selectedOption = col.options?.find(
-                                (opt) => String(opt.id) === e.target.value
-                            );
+                            const rawValue = e.target.value;
+
+                            let newValue: any = null;
+                            if (rawValue !== '') {
+                                newValue =
+                                    col.options?.find(
+                                        (opt) => String(opt.id) === rawValue
+                                    ) ?? null;
+                            }
+
                             if (setEditValues) {
                                 setEditValues((prev) => ({
                                     ...prev,
-                                    [fieldKey]: selectedOption || null,
+                                    [fieldKey]: newValue,
                                 }));
                             }
                         }}
