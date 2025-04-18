@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.4.0] - 2025-04-18
+
+### Added
+
+- Added `datetime` as an editable field type. Now a vlid option for `inputType`.
+
+### Fixed
+
+- Fix an issue with default text color on multi-select dropdowns for dark scheme.
+
 ## [v2.3.3] - 2025-04-18
 
 ### Fixed
