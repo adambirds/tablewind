@@ -7,6 +7,7 @@ import { TableBody } from './TableBody';
 import { PaginationControls } from './PaginationControls';
 import { FilterBar } from './FilterBar';
 import { BulkActionDropdown } from './BulkActionDropdown';
+import DateRangeFilter from './DateRangeFilter';
 
 type EditValues = Record<string, unknown>;
 
@@ -42,6 +43,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     onEditCancel,
     handleDelete,
     navigate,
+    dateRangeFilter,
 }: DataTableProps<T> &
     InlineEditCallbacks & { navigate?: (url: string) => void }) {
     // Define a default navigation function (fallback for plain React apps)
@@ -387,6 +389,38 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                     </div>
                     <div className="non-sticky-wrapper">
                         <div className="sticky right-0 mt-4 flex items-center space-x-4 sm:mt-0">
+                            {dateRangeFilter && (
+                                <DateRangeFilter
+                                    queryParamBase={
+                                        dateRangeFilter.queryParamBase
+                                    }
+                                    initialStartDate={
+                                        dateRangeFilter.initialStartDate
+                                    }
+                                    initialEndDate={
+                                        dateRangeFilter.initialEndDate
+                                    }
+                                    onApply={(filters) =>
+                                        setQuery((prev) => ({
+                                            ...prev,
+                                            ...filters,
+                                            page: '1',
+                                        }))
+                                    }
+                                    onReset={() =>
+                                        setQuery((prev) => {
+                                            const updated = { ...prev };
+                                            delete updated[
+                                                `${dateRangeFilter.queryParamBase}_gte`
+                                            ];
+                                            delete updated[
+                                                `${dateRangeFilter.queryParamBase}_lte`
+                                            ];
+                                            return { ...updated, page: '1' };
+                                        })
+                                    }
+                                />
+                            )}
                             {selectedIds.length > 0 &&
                                 !allItemsSelected &&
                                 data &&

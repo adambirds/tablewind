@@ -76,4 +76,10 @@ export interface DataTableProps<T> {
     className?: string;
     /** Handler for deleting */
     handleDelete?: (id: string) => void;
+    /** Handler for date filter */
+    dateRangeFilter?: {
+        queryParamBase: string;
+        initialStartDate?: string;
+        initialEndDate?: string;
+    };    
 }
