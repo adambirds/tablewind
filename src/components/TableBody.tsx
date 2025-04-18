@@ -4,6 +4,8 @@ import { MultiSelectDropdown } from './MultiSelectDropdown';
 import { Switch } from '@headlessui/react';
 import { CustomDatePicker } from './CustomDatePicker';
 
+type OptionType = { id: string | number; name: string } | null;
+
 interface TableBodyProps<T> {
     data?: T[];
     columns: ColumnConfig<T>[];
@@ -84,7 +86,7 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                         onChange={(e) => {
                             const rawValue = e.target.value;
 
-                            let newValue: any = null;
+                            let newValue: OptionType = null;
                             if (rawValue !== '') {
                                 newValue =
                                     col.options?.find(
