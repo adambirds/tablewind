@@ -2,6 +2,7 @@ import React from 'react';
 import { ColumnConfig } from '../types';
 import { MultiSelectDropdown } from './MultiSelectDropdown';
 import { Switch } from '@headlessui/react';
+import { CustomDatePicker } from './CustomDatePicker';
 
 interface TableBodyProps<T> {
     data?: T[];
@@ -127,6 +128,19 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                         }}
                     />
                 );
+                case 'datetime':
+                    return (
+                        <CustomDatePicker
+                            value={typeof value === 'string' ? value : null}
+                            onChange={(newIso) =>
+                                setEditValues?.((prev) => ({
+                                    ...prev,
+                                    [fieldKey]: newIso,
+                                }))
+                            }
+                        />
+                    );
+                
             default:
                 return null;
         }
