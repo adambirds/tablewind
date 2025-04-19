@@ -1,3 +1,4 @@
+// src/components/DateRangeFilter.tsx
 import React, {
     useState,
     useEffect,
@@ -6,7 +7,8 @@ import React, {
     useCallback,
 } from 'react';
 import { createPortal } from 'react-dom';
-import { format, parseISO, startOfDay, endOfDay, isValid } from 'date-fns';
+import { format, parseISO, isValid } from 'date-fns';
+import { utcStartOfDay, utcEndOfDay } from '../utils/utcConverters';
 
 interface Preset {
     label: string;
@@ -32,8 +34,6 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     onReset,
     queryParamBase,
 }) => {
-    console.log('[DateRangeFilter] Component rendered');
-
     const [startDate, setStartDate] = useState<string>(
         initialStartDate ? format(parseISO(initialStartDate), 'yyyy-MM-dd') : ''
     );
@@ -42,11 +42,13 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     );
     const [appliedStartDate, setAppliedStartDate] = useState<string>(
         initialStartDate
-            ? startOfDay(parseISO(initialStartDate)).toISOString()
+            ? utcStartOfDay(parseISO(initialStartDate)).toISOString()
             : ''
     );
     const [appliedEndDate, setAppliedEndDate] = useState<string>(
-        initialEndDate ? endOfDay(parseISO(initialEndDate)).toISOString() : ''
+        initialEndDate
+            ? utcEndOfDay(parseISO(initialEndDate)).toISOString()
+            : ''
     );
     const [isOpen, setIsOpen] = useState(false);
 
@@ -68,67 +70,71 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
             return date;
         };
         return [
-            { label: 'Today', start: startOfDay(today), end: endOfDay(today) },
+            {
+                label: 'Today',
+                start: utcStartOfDay(today),
+                end: utcEndOfDay(today),
+            },
             {
                 label: 'Yesterday',
-                start: startOfDay(subtractDays(1)),
-                end: endOfDay(subtractDays(1)),
+                start: utcStartOfDay(subtractDays(1)),
+                end: utcEndOfDay(subtractDays(1)),
             },
             {
                 label: 'Last 7 Days',
-                start: startOfDay(subtractDays(7)),
-                end: endOfDay(today),
+                start: utcStartOfDay(subtractDays(7)),
+                end: utcEndOfDay(today),
             },
             {
                 label: 'Last 30 Days',
-                start: startOfDay(subtractDays(30)),
-                end: endOfDay(today),
+                start: utcStartOfDay(subtractDays(30)),
+                end: utcEndOfDay(today),
             },
             {
                 label: 'Last 3 Months',
-                start: startOfDay(subtractMonths(3)),
-                end: endOfDay(today),
+                start: utcStartOfDay(subtractMonths(3)),
+                end: utcEndOfDay(today),
             },
             {
                 label: 'Last 6 Months',
-                start: startOfDay(subtractMonths(6)),
-                end: endOfDay(today),
+                start: utcStartOfDay(subtractMonths(6)),
+                end: utcEndOfDay(today),
             },
             {
                 label: 'This Month',
-                start: startOfDay(
+                start: utcStartOfDay(
                     new Date(today.getFullYear(), today.getMonth(), 1)
                 ),
-                end: endOfDay(today),
+                end: utcEndOfDay(today),
             },
             {
                 label: 'Last Month',
-                start: startOfDay(
+                start: utcStartOfDay(
                     new Date(today.getFullYear(), today.getMonth() - 1, 1)
                 ),
-                end: endOfDay(
+                end: utcEndOfDay(
                     new Date(today.getFullYear(), today.getMonth(), 0)
                 ),
             },
             {
                 label: 'This Year',
-                start: startOfDay(new Date(today.getFullYear(), 0, 1)),
-                end: endOfDay(today),
+                start: utcStartOfDay(new Date(today.getFullYear(), 0, 1)),
+                end: utcEndOfDay(today),
             },
             {
                 label: 'Last Year',
-                start: startOfDay(new Date(today.getFullYear() - 1, 0, 1)),
-                end: endOfDay(new Date(today.getFullYear() - 1, 11, 31)),
+                start: utcStartOfDay(new Date(today.getFullYear() - 1, 0, 1)),
+                end: utcEndOfDay(new Date(today.getFullYear() - 1, 11, 31)),
             },
             {
                 label: 'Last 5 Years',
-                start: startOfDay(new Date(today.getFullYear() - 5, 0, 1)),
-                end: endOfDay(today),
+                start: utcStartOfDay(new Date(today.getFullYear() - 5, 0, 1)),
+                end: utcEndOfDay(today),
             },
             {
                 label: 'All Time',
-                start: startOfDay(new Date(1970, 0, 1)),
-                end: endOfDay(today),
+                start: utcStartOfDay(new Date(1970, 0, 1)),
+                end: utcEndOfDay(today),
             },
         ];
     }, [now]);
@@ -136,12 +142,13 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     const matchPreset = useCallback(
         (startISO: string, endISO: string): string | null => {
             for (const preset of presets) {
-                const presetStartISO = startOfDay(preset.start).toISOString();
-                const presetEndISO = endOfDay(preset.end).toISOString();
-                const match =
-                    startISO === presetStartISO && endISO === presetEndISO;
-                console.log(`[MATCH PRESET] ${preset.label} → Match? ${match}`);
-                if (match) return preset.label;
+                const presetStartISO = utcStartOfDay(
+                    preset.start
+                ).toISOString();
+                const presetEndISO = utcEndOfDay(preset.end).toISOString();
+                if (startISO === presetStartISO && endISO === presetEndISO) {
+                    return preset.label;
+                }
             }
             return null;
         },
@@ -151,20 +158,16 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     const displayLabel = useMemo(() => {
         if (appliedStartDate && appliedEndDate) {
             const matched = matchPreset(appliedStartDate, appliedEndDate);
-            const label = matched
+            return matched
                 ? matched
-                : `${formatDateDisplay(appliedStartDate)} - ${formatDateDisplay(appliedEndDate)}`;
-            console.log('[DISPLAY LABEL]', {
-                appliedStartDate,
-                appliedEndDate,
-                label,
-            });
-            return label;
+                : `${formatDateDisplay(appliedStartDate)} - ${formatDateDisplay(
+                      appliedEndDate
+                  )}`;
         }
         return 'Filter by Date';
     }, [appliedStartDate, appliedEndDate, matchPreset]);
 
-    // Sync only inputs from props, don't override applied state
+    // Sync only inputs from props
     useEffect(() => {
         if (initialStartDate) {
             setStartDate(format(parseISO(initialStartDate), 'yyyy-MM-dd'));
@@ -208,9 +211,8 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
             console.warn('Invalid date selection', { startDate, endDate });
             return;
         }
-        const appliedStart = startOfDay(parsedStart).toISOString();
-        const appliedEnd = endOfDay(parsedEnd).toISOString();
-        console.log('[APPLY]', { appliedStart, appliedEnd });
+        const appliedStart = utcStartOfDay(parsedStart).toISOString();
+        const appliedEnd = utcEndOfDay(parsedEnd).toISOString();
         setAppliedStartDate(appliedStart);
         setAppliedEndDate(appliedEnd);
         onApply({
@@ -230,8 +232,10 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     };
 
     const handlePresetClick = (preset: Preset) => {
-        setStartDate(format(startOfDay(preset.start), 'yyyy-MM-dd'));
-        setEndDate(format(endOfDay(preset.end), 'yyyy-MM-dd'));
+        setStartDate(
+            format(parseISO(preset.start.toISOString()), 'yyyy-MM-dd')
+        );
+        setEndDate(format(parseISO(preset.end.toISOString()), 'yyyy-MM-dd'));
     };
 
     const dropdown = (

@@ -9,6 +9,7 @@ import { FilterBar } from './FilterBar';
 import { BulkActionDropdown } from './BulkActionDropdown';
 import DateRangeFilter from './DateRangeFilter';
 import { subDays, startOfDay, endOfDay } from 'date-fns';
+import { utcStartOfDay, utcEndOfDay } from '../utils/utcConverters';
 
 type EditValues = Record<string, unknown>;
 
@@ -346,6 +347,14 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
         };
     }, [data]);
 
+    // default “last 30 days” in the exact same local→UTC form your filter uses
+    const defaultStartISO = dateRangeFilter
+        ? utcStartOfDay(subDays(new Date(), 30)).toISOString()
+        : '';
+    const defaultEndISO = dateRangeFilter
+        ? utcEndOfDay(new Date()).toISOString()
+        : '';
+
     // ------------------------
     // Filter section content.
     // ------------------------
@@ -360,6 +369,21 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
 
     const hasActiveFilters = filterKeys.some((key) => {
         const val = query[key];
+
+        // if we have a dateRangeFilter AND both gte+lte exactly match the defaults,
+        // skip *both* keys so neither counts as “active”
+        if (
+            dateRangeFilter &&
+            (key === `${dateRangeFilter.queryParamBase}_gte` ||
+                key === `${dateRangeFilter.queryParamBase}_lte`) &&
+            query[`${dateRangeFilter.queryParamBase}_gte`] ===
+                defaultStartISO &&
+            query[`${dateRangeFilter.queryParamBase}_lte`] === defaultEndISO
+        ) {
+            return false;
+        }
+
+        // otherwise, any non-empty string or non-empty array is “active”
         return Array.isArray(val) ? val.length > 0 : val !== '';
     });
 
