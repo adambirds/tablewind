@@ -121,7 +121,7 @@
     --default-light-bulk-dropdown-divider: theme('colors.slate.100');
 
     --default-dark-multi-select-item-bg: var(--default-dark-tablewind-accent);
-    --default-dark-multi-select-item-text: theme('colors.slate.100');
+    --default-dark-multi-select-item-text: theme('colors.slate.800');
     --default-light-multi-select-item-bg: var(--default-light-tablewind-accent);
     --default-light-multi-select-item-text: theme('colors.slate.800');
 }

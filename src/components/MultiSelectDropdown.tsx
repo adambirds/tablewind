@@ -60,7 +60,7 @@ export function MultiSelectDropdown({
     const dropdown = isOpen && (
         <ul
             style={dropdownStyle}
-            className="z-50 rounded-md border border-light_tablewind_border_primary bg-light_tablewind_bg_primary text-sm shadow-sm dark:border-dark_tablewind_border_primary dark:bg-dark_tablewind_bg_primary"
+            className="z-50 rounded-md border border-light_tablewind_border_primary bg-light_tablewind_bg_primary text-sm shadow-sm dark:border-dark_tablewind_border_primary dark:bg-dark_tablewind_bg_primary dark:text-dark_tablewind_text_primary text-light_tablewind_text_primary"
         >
             {options
                 .filter((opt) => !selected.includes(opt.id))
