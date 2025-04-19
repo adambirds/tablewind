@@ -347,7 +347,6 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
         };
     }, [data]);
 
-    // default “last 30 days” in the exact same local→UTC form your filter uses
     const defaultStartISO = dateRangeFilter
         ? utcStartOfDay(subDays(new Date(), 30)).toISOString()
         : '';
