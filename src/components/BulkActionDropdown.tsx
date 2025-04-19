@@ -31,7 +31,8 @@ export function BulkActionDropdown({
                 position: 'absolute',
                 top: rect.bottom + window.scrollY,
                 left: rect.left + window.scrollX,
-                width: rect.width,
+                minWidth: rect.width,
+                width: "max-content",
                 zIndex: 9999,
             });
         }
