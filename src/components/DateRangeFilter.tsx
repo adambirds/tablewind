@@ -1,6 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, {
+    useState,
+    useEffect,
+    useRef,
+    useMemo,
+    useCallback,
+} from 'react';
 import { createPortal } from 'react-dom';
-import { format, parseISO, startOfDay, endOfDay, isSameDay } from 'date-fns';
+import { format, parseISO, startOfDay, endOfDay, isValid } from 'date-fns';
 
 interface Preset {
     label: string;
@@ -16,93 +22,8 @@ interface DateRangeFilterProps {
     queryParamBase: string;
 }
 
-const presets: Preset[] = [
-    {
-        label: 'Today',
-        start: startOfDay(new Date()),
-        end: endOfDay(new Date()),
-    },
-    {
-        label: 'Yesterday',
-        start: startOfDay(new Date(Date.now() - 86400000)),
-        end: endOfDay(new Date(Date.now() - 86400000)),
-    },
-    {
-        label: 'Last 7 Days',
-        start: startOfDay(new Date(Date.now() - 86400000 * 7)),
-        end: endOfDay(new Date()),
-    },
-    {
-        label: 'Last 30 Days',
-        start: startOfDay(new Date(Date.now() - 86400000 * 30)),
-        end: endOfDay(new Date()),
-    },
-    {
-        label: 'Last 3 Months',
-        start: startOfDay(
-            new Date(new Date().setMonth(new Date().getMonth() - 3))
-        ),
-        end: endOfDay(new Date()),
-    },
-    {
-        label: 'Last 6 Months',
-        start: startOfDay(
-            new Date(new Date().setMonth(new Date().getMonth() - 6))
-        ),
-        end: endOfDay(new Date()),
-    },
-    {
-        label: 'This Month',
-        start: startOfDay(new Date(new Date().setDate(1))),
-        end: endOfDay(new Date()),
-    },
-    {
-        label: 'Last Month',
-        start: startOfDay(
-            new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1)
-        ),
-        end: endOfDay(
-            new Date(new Date().getFullYear(), new Date().getMonth(), 0)
-        ),
-    },
-    {
-        label: 'This Year',
-        start: startOfDay(new Date(new Date().getFullYear(), 0, 1)),
-        end: endOfDay(new Date()),
-    },
-    {
-        label: 'Last Year',
-        start: startOfDay(new Date(new Date().getFullYear() - 1, 0, 1)),
-        end: endOfDay(new Date(new Date().getFullYear() - 1, 11, 31)),
-    },
-    {
-        label: 'Last 5 Years',
-        start: startOfDay(new Date(new Date().getFullYear() - 5, 0, 1)),
-        end: endOfDay(new Date()),
-    },
-    {
-        label: 'All Time',
-        start: startOfDay(new Date(1970, 0, 1)),
-        end: endOfDay(new Date()),
-    },
-];
-
 const formatDateDisplay = (date: string) =>
     format(parseISO(date), 'dd/MM/yyyy');
-
-const matchPreset = (start: string, end: string): string | null => {
-    const startDate = parseISO(start);
-    const endDate = parseISO(end);
-    for (const preset of presets) {
-        if (
-            isSameDay(startDate, preset.start) &&
-            isSameDay(endDate, preset.end)
-        ) {
-            return preset.label;
-        }
-    }
-    return null;
-};
 
 const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     initialStartDate,
@@ -111,17 +32,147 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     onReset,
     queryParamBase,
 }) => {
+    console.log('[DateRangeFilter] Component rendered');
+
     const [startDate, setStartDate] = useState<string>(
         initialStartDate ? format(parseISO(initialStartDate), 'yyyy-MM-dd') : ''
     );
     const [endDate, setEndDate] = useState<string>(
         initialEndDate ? format(parseISO(initialEndDate), 'yyyy-MM-dd') : ''
     );
+    const [appliedStartDate, setAppliedStartDate] = useState<string>(
+        initialStartDate
+            ? startOfDay(parseISO(initialStartDate)).toISOString()
+            : ''
+    );
+    const [appliedEndDate, setAppliedEndDate] = useState<string>(
+        initialEndDate ? endOfDay(parseISO(initialEndDate)).toISOString() : ''
+    );
     const [isOpen, setIsOpen] = useState(false);
 
     const containerRef = useRef<HTMLDivElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
+
+    const now = useMemo(() => new Date(), []);
+    const presets = useMemo<Preset[]>(() => {
+        const today = now;
+        const subtractDays = (days: number) => {
+            const date = new Date(today);
+            date.setDate(date.getDate() - days);
+            return date;
+        };
+        const subtractMonths = (months: number) => {
+            const date = new Date(today);
+            date.setMonth(date.getMonth() - months);
+            return date;
+        };
+        return [
+            { label: 'Today', start: startOfDay(today), end: endOfDay(today) },
+            {
+                label: 'Yesterday',
+                start: startOfDay(subtractDays(1)),
+                end: endOfDay(subtractDays(1)),
+            },
+            {
+                label: 'Last 7 Days',
+                start: startOfDay(subtractDays(7)),
+                end: endOfDay(today),
+            },
+            {
+                label: 'Last 30 Days',
+                start: startOfDay(subtractDays(30)),
+                end: endOfDay(today),
+            },
+            {
+                label: 'Last 3 Months',
+                start: startOfDay(subtractMonths(3)),
+                end: endOfDay(today),
+            },
+            {
+                label: 'Last 6 Months',
+                start: startOfDay(subtractMonths(6)),
+                end: endOfDay(today),
+            },
+            {
+                label: 'This Month',
+                start: startOfDay(
+                    new Date(today.getFullYear(), today.getMonth(), 1)
+                ),
+                end: endOfDay(today),
+            },
+            {
+                label: 'Last Month',
+                start: startOfDay(
+                    new Date(today.getFullYear(), today.getMonth() - 1, 1)
+                ),
+                end: endOfDay(
+                    new Date(today.getFullYear(), today.getMonth(), 0)
+                ),
+            },
+            {
+                label: 'This Year',
+                start: startOfDay(new Date(today.getFullYear(), 0, 1)),
+                end: endOfDay(today),
+            },
+            {
+                label: 'Last Year',
+                start: startOfDay(new Date(today.getFullYear() - 1, 0, 1)),
+                end: endOfDay(new Date(today.getFullYear() - 1, 11, 31)),
+            },
+            {
+                label: 'Last 5 Years',
+                start: startOfDay(new Date(today.getFullYear() - 5, 0, 1)),
+                end: endOfDay(today),
+            },
+            {
+                label: 'All Time',
+                start: startOfDay(new Date(1970, 0, 1)),
+                end: endOfDay(today),
+            },
+        ];
+    }, [now]);
+
+    const matchPreset = useCallback(
+        (startISO: string, endISO: string): string | null => {
+            for (const preset of presets) {
+                const presetStartISO = startOfDay(preset.start).toISOString();
+                const presetEndISO = endOfDay(preset.end).toISOString();
+                const match =
+                    startISO === presetStartISO && endISO === presetEndISO;
+                console.log(`[MATCH PRESET] ${preset.label} → Match? ${match}`);
+                if (match) return preset.label;
+            }
+            return null;
+        },
+        [presets]
+    );
+
+    const displayLabel = useMemo(() => {
+        if (appliedStartDate && appliedEndDate) {
+            const matched = matchPreset(appliedStartDate, appliedEndDate);
+            const label = matched
+                ? matched
+                : `${formatDateDisplay(appliedStartDate)} - ${formatDateDisplay(appliedEndDate)}`;
+            console.log('[DISPLAY LABEL]', {
+                appliedStartDate,
+                appliedEndDate,
+                label,
+            });
+            return label;
+        }
+        return 'Filter by Date';
+    }, [appliedStartDate, appliedEndDate, matchPreset]);
+
+    // Sync only inputs from props, don't override applied state
+    useEffect(() => {
+        if (initialStartDate) {
+            setStartDate(format(parseISO(initialStartDate), 'yyyy-MM-dd'));
+        }
+        if (initialEndDate) {
+            setEndDate(format(parseISO(initialEndDate), 'yyyy-MM-dd'));
+        }
+    }, [initialStartDate, initialEndDate]);
 
     useEffect(() => {
         if (isOpen && containerRef.current) {
@@ -151,39 +202,36 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     }, []);
 
     const apply = () => {
-        const filters: Record<string, string> = {};
-        if (startDate)
-            filters[`${queryParamBase}_gte`] = startOfDay(
-                parseISO(startDate)
-            ).toISOString();
-        if (endDate)
-            filters[`${queryParamBase}_lte`] = endOfDay(
-                parseISO(endDate)
-            ).toISOString();
-        onApply(filters);
+        const parsedStart = parseISO(startDate);
+        const parsedEnd = parseISO(endDate);
+        if (!isValid(parsedStart) || !isValid(parsedEnd)) {
+            console.warn('Invalid date selection', { startDate, endDate });
+            return;
+        }
+        const appliedStart = startOfDay(parsedStart).toISOString();
+        const appliedEnd = endOfDay(parsedEnd).toISOString();
+        console.log('[APPLY]', { appliedStart, appliedEnd });
+        setAppliedStartDate(appliedStart);
+        setAppliedEndDate(appliedEnd);
+        onApply({
+            [`${queryParamBase}_gte`]: appliedStart,
+            [`${queryParamBase}_lte`]: appliedEnd,
+        });
         setIsOpen(false);
     };
 
     const reset = () => {
         setStartDate('');
         setEndDate('');
+        setAppliedStartDate('');
+        setAppliedEndDate('');
         onReset();
         setIsOpen(false);
     };
 
     const handlePresetClick = (preset: Preset) => {
-        setStartDate(format(preset.start, 'yyyy-MM-dd'));
-        setEndDate(format(preset.end, 'yyyy-MM-dd'));
-    };
-
-    const displayLabel = () => {
-        if (startDate && endDate) {
-            const presetLabel = matchPreset(startDate, endDate);
-            return presetLabel
-                ? presetLabel
-                : `${formatDateDisplay(startDate)} - ${formatDateDisplay(endDate)}`;
-        }
-        return 'Filter by Date';
+        setStartDate(format(startOfDay(preset.start), 'yyyy-MM-dd'));
+        setEndDate(format(endOfDay(preset.end), 'yyyy-MM-dd'));
     };
 
     const dropdown = (
@@ -250,7 +298,7 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
                 onClick={() => setIsOpen(!isOpen)}
                 className="rounded-md border border-light_tablewind_border_primary bg-light_tablewind_bg_primary px-4 py-2 text-sm font-medium text-light_tablewind_text_secondary hover:bg-light_tablewind_bg_primary_hover dark:border-dark_tablewind_border_primary dark:bg-dark_tablewind_bg_primary dark:text-dark_tablewind_text_secondary dark:hover:bg-dark_tablewind_bg_primary_hover"
             >
-                {displayLabel()}
+                {displayLabel}
             </button>
             {isOpen && createPortal(dropdown, document.body)}
         </div>

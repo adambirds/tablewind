@@ -79,7 +79,5 @@ export interface DataTableProps<T> {
     /** Handler for date filter */
     dateRangeFilter?: {
         queryParamBase: string;
-        initialStartDate?: string;
-        initialEndDate?: string;
     };    
 }

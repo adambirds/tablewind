@@ -8,6 +8,7 @@ import { PaginationControls } from './PaginationControls';
 import { FilterBar } from './FilterBar';
 import { BulkActionDropdown } from './BulkActionDropdown';
 import DateRangeFilter from './DateRangeFilter';
+import { subDays, startOfDay, endOfDay } from 'date-fns';
 
 type EditValues = Record<string, unknown>;
 
@@ -394,11 +395,16 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                                     queryParamBase={
                                         dateRangeFilter.queryParamBase
                                     }
+                                    // ←— hydrate from current query state
                                     initialStartDate={
-                                        dateRangeFilter.initialStartDate
+                                        query[
+                                            `${dateRangeFilter.queryParamBase}_gte`
+                                        ] as string
                                     }
                                     initialEndDate={
-                                        dateRangeFilter.initialEndDate
+                                        query[
+                                            `${dateRangeFilter.queryParamBase}_lte`
+                                        ] as string
                                     }
                                     onApply={(filters) =>
                                         setQuery((prev) => ({
@@ -421,6 +427,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                                     }
                                 />
                             )}
+
                             {selectedIds.length > 0 &&
                                 !allItemsSelected &&
                                 data &&
@@ -469,20 +476,47 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                                 {showFilters ? 'Hide Filters' : 'Show Filters'}
                             </button>
                             {hasActiveFilters && (
-                                <button
-                                    onClick={() => {
-                                        setQuery((prev) => {
-                                            const newQuery = { ...prev };
-                                            filterKeys.forEach(
-                                                (key) => delete newQuery[key]
-                                            );
-                                            return { ...newQuery, page: '1' };
-                                        });
-                                    }}
-                                    className="rounded-md bg-light_reset_filters_bg px-3 py-2 text-sm font-medium text-light_reset_filters_text hover:bg-light_reset_filters_bg_hover dark:bg-dark_reset_filters_bg dark:text-dark_reset_filters_text dark:hover:bg-dark_reset_filters_bg_hover"
-                                >
-                                    Reset Filters
-                                </button>
+                                <>
+                                    {/* Reset Filters */}
+                                    <button
+                                        onClick={() => {
+                                            setQuery((prev) => {
+                                                const newQuery = { ...prev };
+                                                // 1) remove every filter key
+                                                filterKeys.forEach(
+                                                    (key) =>
+                                                        delete newQuery[key]
+                                                );
+                                                // 2) reset date back to last 30 days
+                                                if (dateRangeFilter) {
+                                                    const now = new Date();
+                                                    const defaultStart =
+                                                        startOfDay(
+                                                            subDays(now, 30)
+                                                        );
+                                                    const defaultEnd =
+                                                        endOfDay(now);
+                                                    newQuery[
+                                                        `${dateRangeFilter.queryParamBase}_gte`
+                                                    ] =
+                                                        defaultStart.toISOString();
+                                                    newQuery[
+                                                        `${dateRangeFilter.queryParamBase}_lte`
+                                                    ] =
+                                                        defaultEnd.toISOString();
+                                                }
+                                                // 3) go back to page 1
+                                                return {
+                                                    ...newQuery,
+                                                    page: '1',
+                                                };
+                                            });
+                                        }}
+                                        className="rounded-md bg-light_reset_filters_bg px-3 py-2 text-sm font-medium text-light_reset_filters_text hover:bg-light_reset_filters_bg_hover dark:bg-dark_reset_filters_bg dark:text-dark_reset_filters_text dark:hover:bg-dark_reset_filters_bg_hover"
+                                    >
+                                        Reset Filters
+                                    </button>
+                                </>
                             )}
                         </div>
                     </div>
