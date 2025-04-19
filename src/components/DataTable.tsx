@@ -510,23 +510,20 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                                                     (key) =>
                                                         delete newQuery[key]
                                                 );
-                                                // 2) reset date back to last 30 days
+                                                // 2) reset date back to last 30 days in UTC
                                                 if (dateRangeFilter) {
                                                     const now = new Date();
-                                                    const defaultStart =
-                                                        startOfDay(
-                                                            subDays(now, 30)
-                                                        );
-                                                    const defaultEnd =
-                                                        endOfDay(now);
                                                     newQuery[
                                                         `${dateRangeFilter.queryParamBase}_gte`
-                                                    ] =
-                                                        defaultStart.toISOString();
+                                                    ] = utcStartOfDay(
+                                                        subDays(now, 30)
+                                                    ).toISOString();
                                                     newQuery[
                                                         `${dateRangeFilter.queryParamBase}_lte`
                                                     ] =
-                                                        defaultEnd.toISOString();
+                                                        utcEndOfDay(
+                                                            now
+                                                        ).toISOString();
                                                 }
                                                 // 3) go back to page 1
                                                 return {

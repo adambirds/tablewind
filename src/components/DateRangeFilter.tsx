@@ -167,13 +167,25 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
         return 'Filter by Date';
     }, [appliedStartDate, appliedEndDate, matchPreset]);
 
-    // Sync only inputs from props
     useEffect(() => {
         if (initialStartDate) {
+            const isoStart = utcStartOfDay(
+                parseISO(initialStartDate)
+            ).toISOString();
             setStartDate(format(parseISO(initialStartDate), 'yyyy-MM-dd'));
+            setAppliedStartDate(isoStart);
+        } else {
+            setStartDate('');
+            setAppliedStartDate('');
         }
+
         if (initialEndDate) {
+            const isoEnd = utcEndOfDay(parseISO(initialEndDate)).toISOString();
             setEndDate(format(parseISO(initialEndDate), 'yyyy-MM-dd'));
+            setAppliedEndDate(isoEnd);
+        } else {
+            setEndDate('');
+            setAppliedEndDate('');
         }
     }, [initialStartDate, initialEndDate]);
 
