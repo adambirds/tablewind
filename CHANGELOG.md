@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.5.0] - 2025-04-19
+
+### Added
+
+- Added optional date filtering support to the table.
+
+### Fixed
+
+- Fix an issue with default text color on multi-select dropdowns for dark scheme.
+
 ## [v2.4.0] - 2025-04-18
 
 ### Added
