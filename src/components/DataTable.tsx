@@ -8,7 +8,7 @@ import { PaginationControls } from './PaginationControls';
 import { FilterBar } from './FilterBar';
 import { BulkActionDropdown } from './BulkActionDropdown';
 import DateRangeFilter from './DateRangeFilter';
-import { subDays, startOfDay, endOfDay } from 'date-fns';
+import { subDays } from 'date-fns';
 import { utcStartOfDay, utcEndOfDay } from '../utils/utcConverters';
 
 type EditValues = Record<string, unknown>;
