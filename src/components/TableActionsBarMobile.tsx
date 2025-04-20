@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import DateRangeFilter from './DateRangeFilter';
 import { FilterBar } from './FilterBar';
 import { FilterField, BulkAction } from '../types';
