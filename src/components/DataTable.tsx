@@ -10,6 +10,8 @@ import { BulkActionDropdown } from './BulkActionDropdown';
 import DateRangeFilter from './DateRangeFilter';
 import { subDays } from 'date-fns';
 import { utcStartOfDay, utcEndOfDay } from '../utils/utcConverters';
+import DefaultLoading from './DataTableLoading';
+import DefaultError from './DataTableError';
 
 type EditValues = Record<string, unknown>;
 
@@ -21,9 +23,7 @@ interface InlineEditCallbacks {
 export type DataTableComponentProps<
     T extends { id: string } & Record<string, unknown>,
 > = DataTableProps<T> &
-    InlineEditCallbacks & {
-        navigate?: (url: string) => void;
-    };
+    InlineEditCallbacks
 
 /**
  * Updated DataTable now accepts an optional `navigate` function.
@@ -46,8 +46,11 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     handleDelete,
     navigate,
     dateRangeFilter,
+    loadingComponent,
+    errorComponent,
+    redirectOnError,
 }: DataTableProps<T> &
-    InlineEditCallbacks & { navigate?: (url: string) => void }) {
+    InlineEditCallbacks) {
     // Define a default navigation function (fallback for plain React apps)
     const defaultNavigate = (url: string) => {
         if (typeof window !== 'undefined') {
@@ -574,8 +577,24 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     // ------------------------
     // Rendering the main table
     // ------------------------
-    if (error) return <div>Error loading posts.</div>;
-    if (isLoading) return <div>Loading posts...</div>;
+    if (errorComponent && redirectOnError) {
+        throw new Error(
+            'DataTable: You cannot use both `errorComponent` and `redirectOnError` at the same time.'
+        );
+    }
+    
+    if (error) {
+        if (redirectOnError) {
+            redirectOnError();
+            return null;
+        }
+        return <>{errorComponent || <DefaultError />}</>;
+    }
+    
+    if (isLoading) {
+        return <>{loadingComponent || <DefaultLoading />}</>;
+    }
+    
     if (!data) return null;
 
     return (

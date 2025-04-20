@@ -79,5 +79,9 @@ export interface DataTableProps<T> {
     /** Handler for date filter */
     dateRangeFilter?: {
         queryParamBase: string;
-    };    
+    };
+    loadingComponent?: React.ReactNode;
+    errorComponent?: React.ReactNode;
+    redirectOnError?: () => void;
+    navigate?: (url: string) => void;
 }
