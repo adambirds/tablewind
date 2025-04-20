@@ -26,6 +26,7 @@ interface Props {
     hasActiveFilters: boolean;
     showFilters: boolean;
     setShowFilters: (open: boolean) => void;
+    isMobile: boolean;
 }
 
 const TableActionsBarMobile: React.FC<Props> = ({
@@ -48,9 +49,8 @@ const TableActionsBarMobile: React.FC<Props> = ({
     hasActiveFilters,
     showFilters,
     setShowFilters,
+    isMobile,
 }) => {
-    
-
     return (
         <div className="block md:hidden mb-4">
             {/* Title + Show Filters Button Inline */}
@@ -77,12 +77,12 @@ const TableActionsBarMobile: React.FC<Props> = ({
             {showFilters && (
                 <div className="mt-4 flex flex-col gap-4">
                     {hasActiveFilters && (
-                    <button
-                        onClick={onResetFilters}
-                        className="w-full rounded-md bg-light_reset_filters_bg px-3 py-2 text-sm font-medium text-light_reset_filters_text hover:bg-light_reset_filters_bg_hover dark:bg-dark_reset_filters_bg dark:text-dark_reset_filters_text dark:hover:bg-dark_reset_filters_bg_hover"
-                    >
-                        Reset Filters
-                    </button>
+                        <button
+                            onClick={onResetFilters}
+                            className="w-full rounded-md bg-light_reset_filters_bg px-3 py-2 text-sm font-medium text-light_reset_filters_text hover:bg-light_reset_filters_bg_hover dark:bg-dark_reset_filters_bg dark:text-dark_reset_filters_text dark:hover:bg-dark_reset_filters_bg_hover"
+                        >
+                            Reset Filters
+                        </button>
                     )}
                     {/* Date Range Filter */}
 
@@ -126,12 +126,14 @@ const TableActionsBarMobile: React.FC<Props> = ({
                         </select>
                     </div>
 
-                    <FilterBar
-                        fields={filterFields}
-                        initialFilters={initialFilters}
-                        onFilterChange={onFilterChange}
-                        autoApply={true}
-                    />
+                    {isMobile && (
+                        <FilterBar
+                            fields={filterFields}
+                            initialFilters={initialFilters}
+                            onFilterChange={onFilterChange}
+                            autoApply={true}
+                        />
+                    )}
                 </div>
             )}
 

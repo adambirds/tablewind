@@ -1,5 +1,6 @@
 // src/components/DataTable.tsx
 import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { useTailwindBreakpoint } from '../hooks/useTailwindBreakpoint';
 import { ColumnConfig, DataTableProps, FilterField } from '../types';
 import { usePaginatedFetch } from '../hooks/usePaginatedFetch';
 import { TableHeader } from './TableHeader';
@@ -70,6 +71,8 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     const pageSize = Number(query.page_size || '25');
     const sortBy = typeof query.sort_by === 'string' ? query.sort_by : '';
     const order = query.order === 'desc' ? 'desc' : 'asc';
+
+    const isMobile = useTailwindBreakpoint('md');
 
     // Bulk selection state.
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -484,17 +487,20 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                     hasActiveFilters={hasActiveFilters}
                     showFilters={showMobileFilters}
                     setShowFilters={setShowMobileFilters}
+                    isMobile={isMobile}
                 />
 
                 {/* Inline filters shown only on desktop when toggled */}
                 {showFilters && (
                     <div className="hidden sm:block mt-4">
-                        <FilterBar
-                            fields={mergedFilterFields}
-                            initialFilters={initialFiltersForBar}
-                            onFilterChange={handleFilterChange}
-                            autoApply={true}
-                        />
+                        {!isMobile && (
+                            <FilterBar
+                                fields={mergedFilterFields}
+                                initialFilters={initialFiltersForBar}
+                                onFilterChange={handleFilterChange}
+                                autoApply={true}
+                            />
+                        )}
                     </div>
                 )}
 
