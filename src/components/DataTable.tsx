@@ -12,6 +12,8 @@ import { subDays } from 'date-fns';
 import { utcStartOfDay, utcEndOfDay } from '../utils/utcConverters';
 import DefaultLoading from './DataTableLoading';
 import DefaultError from './DataTableError';
+import TableActionsBarMobile from './TableActionsBarMobile';
+import TableActionsBarDesktop from './TableActionsBarDesktop';
 
 type EditValues = Record<string, unknown>;
 
@@ -22,8 +24,7 @@ interface InlineEditCallbacks {
 
 export type DataTableComponentProps<
     T extends { id: string } & Record<string, unknown>,
-> = DataTableProps<T> &
-    InlineEditCallbacks
+> = DataTableProps<T> & InlineEditCallbacks;
 
 /**
  * Updated DataTable now accepts an optional `navigate` function.
@@ -49,8 +50,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     loadingComponent,
     errorComponent,
     redirectOnError,
-}: DataTableProps<T> &
-    InlineEditCallbacks) {
+}: DataTableProps<T> & InlineEditCallbacks) {
     // Define a default navigation function (fallback for plain React apps)
     const defaultNavigate = (url: string) => {
         if (typeof window !== 'undefined') {
@@ -288,34 +288,33 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     // ------------------------
     // "Mark All" functionality.
     // ------------------------
-    const effectiveFetcher = fetcher ?? ((url: string) =>
-        fetch(url).then((res) => res.json()));
-    
+    const effectiveFetcher =
+        fetcher ?? ((url: string) => fetch(url).then((res) => res.json()));
 
     const markAllSelected = async () => {
         if (!data) return;
-    
+
         const params = buildQueryParams();
         params.set('page', '1');
         params.set('page_size', String(data.pagination.total_items));
         const url = `${endpoint}?${params.toString()}`;
-    
+
         try {
             const allData = await effectiveFetcher(url);
-    
+
             if (!allData || !Array.isArray(allData.results)) {
                 console.error('Invalid response shape from fetcher');
                 return;
             }
-    
-            setSelectedIds(allData.results.map((row: { id: string }) => row.id));
+
+            setSelectedIds(
+                allData.results.map((row: { id: string }) => row.id)
+            );
             setAllItemsSelected(true);
         } catch (err) {
             console.error('Error fetching all items using fetcher:', err);
         }
     };
-    
-    
 
     const cancelAllSelection = () => {
         setSelectedIds([]);
@@ -408,157 +407,95 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
 
     const filterContent = (
         <div>
-            <div ref={extraContentRef} className="">
-                <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                    <div className="non-sticky-wrapper">
-                        <div className="sticky left-0 text-left">
-                            <h1 className="text-2xl font-bold text-light_tablewind_text_primary dark:text-dark_tablewind_text_primary">
-                                {pageTitle || 'Table'}
-                            </h1>
-                            <p className="mt-2 text-sm text-light_tablewind_text_secondary dark:text-dark_tablewind_text_secondary">
-                                {pageSubtitle ||
-                                    'A list of your posts with inline editing, filtering, sorting and pagination.'}
-                            </p>
-                        </div>
-                    </div>
-                    <div className="non-sticky-wrapper">
-                        <div className="sticky right-0 mt-4 flex items-center space-x-4 sm:mt-0">
-                            {dateRangeFilter && (
-                                <DateRangeFilter
-                                    queryParamBase={
-                                        dateRangeFilter.queryParamBase
-                                    }
-                                    // ←— hydrate from current query state
-                                    initialStartDate={
-                                        query[
-                                            `${dateRangeFilter.queryParamBase}_gte`
-                                        ] as string
-                                    }
-                                    initialEndDate={
-                                        query[
-                                            `${dateRangeFilter.queryParamBase}_lte`
-                                        ] as string
-                                    }
-                                    onApply={(filters) =>
-                                        setQuery((prev) => ({
-                                            ...prev,
-                                            ...filters,
-                                            page: '1',
-                                        }))
-                                    }
-                                    onReset={() =>
-                                        setQuery((prev) => {
-                                            const updated = { ...prev };
-                                            delete updated[
-                                                `${dateRangeFilter.queryParamBase}_gte`
-                                            ];
-                                            delete updated[
-                                                `${dateRangeFilter.queryParamBase}_lte`
-                                            ];
-                                            return { ...updated, page: '1' };
-                                        })
-                                    }
-                                />
-                            )}
+            <div ref={extraContentRef}>
+                {/* Desktop Filter Header */}
+                <TableActionsBarDesktop
+                    pageTitle={pageTitle}
+                    pageSubtitle={pageSubtitle}
+                    pageSize={pageSize}
+                    onPageSizeChange={handlePageSizeChange}
+                    onToggleFilters={toggleFilters}
+                    showFilters={showFilters}
+                    hasActiveFilters={hasActiveFilters}
+                    onResetFilters={() => {
+                        const now = new Date();
+                        setQuery((prev) => {
+                            const newQuery = { ...prev };
+                            filterKeys.forEach((key) => delete newQuery[key]);
+                            if (dateRangeFilter) {
+                                newQuery[
+                                    `${dateRangeFilter.queryParamBase}_gte`
+                                ] = utcStartOfDay(
+                                    subDays(now, 30)
+                                ).toISOString();
+                                newQuery[
+                                    `${dateRangeFilter.queryParamBase}_lte`
+                                ] = utcEndOfDay(now).toISOString();
+                            }
+                            return { ...newQuery, page: '1' };
+                        });
+                    }}
+                    dateRangeFilter={dateRangeFilter}
+                    query={query}
+                    setQuery={setQuery}
+                    addNewUrl={addNewUrl}
+                    nav={nav}
+                    selectedIds={selectedIds}
+                    allItemsSelected={allItemsSelected}
+                    data={data}
+                    markAllSelected={markAllSelected}
+                    bulkActions={bulkActions}
+                    filterKeys={filterKeys}
+                />
 
-                            {selectedIds.length > 0 &&
-                                !allItemsSelected &&
-                                data &&
-                                selectedIds.length <
-                                    data.pagination.total_items && (
-                                    <button
-                                        className="mr-4 ml-2 inline-flex justify-center rounded-md border border-light_tablewind_border_primary bg-light_tablewind_bg_primary px-4 py-2 text-sm font-medium text-light_tablewind_text_secondary hover:bg-light_tablewind_bg_primary_hover dark:border-dark_tablewind_border_primary dark:text-dark_tablewind_text_secondary dark:bg-dark_tablewind_bg_primary dark:hover:bg-dark_tablewind_bg_primary_hover"
-                                        onClick={markAllSelected}
-                                    >
-                                        Mark all ({data.pagination.total_items})
-                                        as selected.
-                                    </button>
-                                )}
-                            {selectedIds.length > 0 && bulkActions && (
-                                <BulkActionDropdown
-                                    actions={bulkActions}
-                                    selectedIds={selectedIds}
-                                />
-                            )}
-                            <select
-                                value={pageSize}
-                                onChange={(e) =>
-                                    handlePageSizeChange(Number(e.target.value))
-                                }
-                                className="rounded-md border bg-light_tablewind_bg_primary py-2 pr-8 pl-2 text-sm text-light_tablewind_text_primary hover:bg-light_tablewind_bg_primary_hover focus:outline-none dark:border-dark_tablewind_border_primary dark:bg-dark_tablewind_bg_primary dark:text-dark_tablewind_text_secondary"
-                            >
-                                {[10, 25, 50, 100].map((size) => (
-                                    <option key={size} value={size}>
-                                        {size} per page
-                                    </option>
-                                ))}
-                            </select>
-                            {/* Only show if addNewUrl is set. */}
-                            {addNewUrl && (
-                                <button
-                                    onClick={() => nav(addNewUrl)}
-                                    className="rounded-md bg-light_tablewind_accent dark:bg-dark_tablewind_accent px-4 py-2 text-sm font-semibold text-light_tablewind_text_primary shadow-sm dark:hover:bg-dark_tablewind_accent_hover hover:light_tablewind_accent_hover"
-                                >
-                                    Add New
-                                </button>
-                            )}
-                            <button
-                                onClick={toggleFilters}
-                                className="rounded-md px-3 py-2 text-sm font-medium bg-light_show_filters_bg text-light_show_filters_text hover:bg-light_show_filters_bg_hover dark:bg-dark_show_filters_bg dark:text-dark_show_filters_text dark:hover:bg-dark_show_filters_bg_hover"
-                            >
-                                {showFilters ? 'Hide Filters' : 'Show Filters'}
-                            </button>
-                            {hasActiveFilters && (
-                                <>
-                                    {/* Reset Filters */}
-                                    <button
-                                        onClick={() => {
-                                            setQuery((prev) => {
-                                                const newQuery = { ...prev };
-                                                // 1) remove every filter key
-                                                filterKeys.forEach(
-                                                    (key) =>
-                                                        delete newQuery[key]
-                                                );
-                                                // 2) reset date back to last 30 days in UTC
-                                                if (dateRangeFilter) {
-                                                    const now = new Date();
-                                                    newQuery[
-                                                        `${dateRangeFilter.queryParamBase}_gte`
-                                                    ] = utcStartOfDay(
-                                                        subDays(now, 30)
-                                                    ).toISOString();
-                                                    newQuery[
-                                                        `${dateRangeFilter.queryParamBase}_lte`
-                                                    ] =
-                                                        utcEndOfDay(
-                                                            now
-                                                        ).toISOString();
-                                                }
-                                                // 3) go back to page 1
-                                                return {
-                                                    ...newQuery,
-                                                    page: '1',
-                                                };
-                                            });
-                                        }}
-                                        className="rounded-md bg-light_reset_filters_bg px-3 py-2 text-sm font-medium text-light_reset_filters_text hover:bg-light_reset_filters_bg_hover dark:bg-dark_reset_filters_bg dark:text-dark_reset_filters_text dark:hover:bg-dark_reset_filters_bg_hover"
-                                    >
-                                        Reset Filters
-                                    </button>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                </div>
+                <TableActionsBarMobile
+                    pageTitle={pageTitle}
+                    pageSubtitle={pageSubtitle}
+                    dateRangeFilter={dateRangeFilter}
+                    query={query}
+                    setQuery={setQuery}
+                    filterFields={mergedFilterFields}
+                    initialFilters={initialFiltersForBar}
+                    onFilterChange={handleFilterChange}
+                    pageSize={pageSize}
+                    onPageSizeChange={handlePageSizeChange}
+                    onResetFilters={() => {
+                        const now = new Date();
+                        setQuery((prev) => {
+                            const newQuery = { ...prev };
+                            filterKeys.forEach((key) => delete newQuery[key]);
+                            if (dateRangeFilter) {
+                                newQuery[
+                                    `${dateRangeFilter.queryParamBase}_gte`
+                                ] = utcStartOfDay(
+                                    subDays(now, 30)
+                                ).toISOString();
+                                newQuery[
+                                    `${dateRangeFilter.queryParamBase}_lte`
+                                ] = utcEndOfDay(now).toISOString();
+                            }
+                            return { ...newQuery, page: '1' };
+                        });
+                    }}
+                    selectedIds={selectedIds}
+                    allItemsSelected={allItemsSelected}
+                    data={data}
+                    markAllSelected={markAllSelected}
+                    bulkActions={bulkActions}
+                />
+
+                {/* Inline filters shown only on desktop when toggled */}
                 {showFilters && (
-                    <FilterBar
-                        fields={mergedFilterFields}
-                        initialFilters={initialFiltersForBar}
-                        onFilterChange={handleFilterChange}
-                        autoApply={true}
-                    />
+                    <div className="hidden sm:block mt-4">
+                        <FilterBar
+                            fields={mergedFilterFields}
+                            initialFilters={initialFiltersForBar}
+                            onFilterChange={handleFilterChange}
+                            autoApply={true}
+                        />
+                    </div>
                 )}
+
                 {allItemsSelected && data && (
                     <div className="mb-4 rounded bg-light_success_alert_bg p-2 text-light_success_alert_text text-center dark:bg-dark_success_alert_bg dark:text-dark_success_alert_text">
                         All {data.pagination.total_items} items are selected.
@@ -582,7 +519,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
             'DataTable: You cannot use both `errorComponent` and `redirectOnError` at the same time.'
         );
     }
-    
+
     if (error) {
         if (redirectOnError) {
             redirectOnError();
@@ -590,11 +527,11 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
         }
         return <>{errorComponent || <DefaultError />}</>;
     }
-    
+
     if (isLoading) {
         return <>{loadingComponent || <DefaultLoading />}</>;
     }
-    
+
     if (!data) return null;
 
     return (

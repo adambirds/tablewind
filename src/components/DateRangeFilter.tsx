@@ -309,13 +309,17 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     );
 
     return (
-        <div ref={containerRef} className="relative inline-block text-left">
+        <div
+            ref={containerRef}
+            className="relative w-full md:w-auto md:inline-block text-left"
+        >
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="rounded-md border border-light_tablewind_border_primary bg-light_tablewind_bg_primary px-4 py-2 text-sm font-medium text-light_tablewind_text_secondary hover:bg-light_tablewind_bg_primary_hover dark:border-dark_tablewind_border_primary dark:bg-dark_tablewind_bg_primary dark:text-dark_tablewind_text_secondary dark:hover:bg-dark_tablewind_bg_primary_hover"
+                className="w-full md:w-auto rounded-md border border-light_tablewind_border_primary bg-light_tablewind_bg_primary px-4 py-2 text-sm font-medium text-light_tablewind_text_secondary hover:bg-light_tablewind_bg_primary_hover dark:border-dark_tablewind_border_primary dark:bg-dark_tablewind_bg_primary dark:text-dark_tablewind_text_secondary dark:hover:bg-dark_tablewind_bg_primary_hover"
             >
                 {displayLabel}
             </button>
+
             {isOpen && createPortal(dropdown, document.body)}
         </div>
     );

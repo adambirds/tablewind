@@ -27,14 +27,28 @@ export function BulkActionDropdown({
     useEffect(() => {
         if (menuOpen && containerRef.current) {
             const rect = containerRef.current.getBoundingClientRect();
-            setDropdownStyle({
-                position: 'absolute',
-                top: rect.bottom + window.scrollY,
-                left: rect.left + window.scrollX,
-                minWidth: rect.width,
-                width: "max-content",
-                zIndex: 9999,
-            });
+
+            if (window.innerWidth < 768) {
+                // Mobile: full width dropdown pinned under the button
+                setDropdownStyle({
+                    position: 'fixed',
+                    top: rect.bottom,
+                    left: 0,
+                    right: 0,
+                    width: '100%',
+                    zIndex: 9999,
+                });
+            } else {
+                // Desktop: use exact position and width of button
+                setDropdownStyle({
+                    position: 'absolute',
+                    top: rect.bottom + window.scrollY,
+                    left: rect.left + window.scrollX,
+                    minWidth: rect.width,
+                    width: 'max-content',
+                    zIndex: 9999,
+                });
+            }
         }
     }, [menuOpen]);
 
@@ -44,10 +58,10 @@ export function BulkActionDropdown({
     };
 
     return (
-        <div className="relative inline-block" ref={containerRef}>
+        <div className="relative w-full md:w-auto" ref={containerRef}>
             <button
                 onClick={toggleDropdown}
-                className="inline-flex justify-center rounded-md border border-light_tablewind_border_primary bg-light_tablewind_bg_primary px-4 py-2 text-sm font-medium text-light_tablewind_text_secondary hover:bg-light_tablewind_bg_primary_hover dark:border-dark_tablewind_border_primary dark:bg-gray-800 dark:text-dark_tablewind_text_secondary"
+                className="w-full md:w-auto inline-flex justify-center rounded-md border border-light_tablewind_border_primary bg-light_tablewind_bg_primary px-4 py-2 text-sm font-medium text-light_tablewind_text_secondary hover:bg-light_tablewind_bg_primary_hover dark:border-dark_tablewind_border_primary dark:bg-gray-800 dark:text-dark_tablewind_text_secondary"
             >
                 {buttonLabel}
             </button>
@@ -64,7 +78,7 @@ export function BulkActionDropdown({
                                         onClick={() =>
                                             handleActionClick(action)
                                         }
-                                        className="group flex w-full items-center rounded-md px-2 py-2 text-left text-sm text-light_bulk_dropdown_text dark:text-dark_bulk_dropdown_text hover:bg-light_bulk_dropdown_bg_hover dark:hover:bg-dark_bulk_dropdown_bg_hover"
+                                        className="group flex w-full items-center rounded-md px-4 py-3 text-left text-sm text-light_bulk_dropdown_text dark:text-dark_bulk_dropdown_text hover:bg-light_bulk_dropdown_bg_hover dark:hover:bg-dark_bulk_dropdown_bg_hover"
                                     >
                                         {action.label}
                                     </button>

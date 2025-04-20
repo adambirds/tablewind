@@ -162,7 +162,7 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                             : ''
                     }`}
                 >
-                    <td className="sticky text-center left-0 bg-light_tablewind_bg_primary pl-2 group-hover:bg-light_tablewind_bg_primary_hover dark:bg-dark_tablewind_bg_primary dark:group-hover:bg-dark_tablewind_bg_primary_hover">
+                    <td className="lg:sticky text-center md:left-0 bg-light_tablewind_bg_primary pl-2 group-hover:bg-light_tablewind_bg_primary_hover dark:bg-dark_tablewind_bg_primary dark:group-hover:bg-dark_tablewind_bg_primary_hover">
                         <input
                             type="checkbox"
                             checked={selectedIds.includes(row.id)}
@@ -193,7 +193,7 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                         </td>
                     ))}
                     {anyEditable && (
-                        <td className="sticky right-0 ml-2 bg-light_tablewind_bg_primary px-3 py-4 text-right text-sm font-medium whitespace-nowrap group-hover:bg-light_tablewind_bg_primary_hover dark:bg-dark_tablewind_bg_primary dark:group-hover:bg-dark_tablewind_bg_primary_hover">
+                        <td className="lg:sticky md:right-0 ml-2 bg-light_tablewind_bg_primary px-3 py-4 text-right text-sm font-medium whitespace-nowrap group-hover:bg-light_tablewind_bg_primary_hover dark:bg-dark_tablewind_bg_primary dark:group-hover:bg-dark_tablewind_bg_primary_hover">
                             {isRowEditing(row) ? (
                                 <div className="flex gap-2">
                                     <button
