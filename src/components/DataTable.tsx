@@ -6,8 +6,6 @@ import { TableHeader } from './TableHeader';
 import { TableBody } from './TableBody';
 import { PaginationControls } from './PaginationControls';
 import { FilterBar } from './FilterBar';
-import { BulkActionDropdown } from './BulkActionDropdown';
-import DateRangeFilter from './DateRangeFilter';
 import { subDays } from 'date-fns';
 import { utcStartOfDay, utcEndOfDay } from '../utils/utcConverters';
 import DefaultLoading from './DataTableLoading';
@@ -50,6 +48,8 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     loadingComponent,
     errorComponent,
     redirectOnError,
+    showMobileFilters,
+    setShowMobileFilters,
 }: DataTableProps<T> & InlineEditCallbacks) {
     // Define a default navigation function (fallback for plain React apps)
     const defaultNavigate = (url: string) => {
@@ -445,7 +445,6 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                     data={data}
                     markAllSelected={markAllSelected}
                     bulkActions={bulkActions}
-                    filterKeys={filterKeys}
                 />
 
                 <TableActionsBarMobile
@@ -482,6 +481,9 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                     data={data}
                     markAllSelected={markAllSelected}
                     bulkActions={bulkActions}
+                    hasActiveFilters={hasActiveFilters}
+                    showFilters={showMobileFilters}
+                    setShowFilters={setShowMobileFilters}
                 />
 
                 {/* Inline filters shown only on desktop when toggled */}

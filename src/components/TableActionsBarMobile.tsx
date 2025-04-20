@@ -23,6 +23,9 @@ interface Props {
     data?: { pagination: { total_items: number } };
     markAllSelected: () => void;
     bulkActions?: BulkAction[];
+    hasActiveFilters: boolean;
+    showFilters: boolean;
+    setShowFilters: (open: boolean) => void;
 }
 
 const TableActionsBarMobile: React.FC<Props> = ({
@@ -42,8 +45,11 @@ const TableActionsBarMobile: React.FC<Props> = ({
     data,
     markAllSelected,
     bulkActions,
+    hasActiveFilters,
+    showFilters,
+    setShowFilters,
 }) => {
-    const [open, setOpen] = useState(false);
+    
 
     return (
         <div className="block md:hidden mb-4">
@@ -60,22 +66,25 @@ const TableActionsBarMobile: React.FC<Props> = ({
                     )}
                 </div>
                 <button
-                    onClick={() => setOpen((prev) => !prev)}
+                    onClick={() => setShowFilters(!showFilters)}
                     className="shrink-0 rounded-md bg-light_show_filters_bg px-3 py-2 text-sm font-medium text-light_show_filters_text hover:bg-light_show_filters_bg_hover dark:bg-dark_show_filters_bg dark:text-dark_show_filters_text dark:hover:bg-dark_show_filters_bg_hover"
                 >
-                    {open ? 'Hide Filters' : 'Show Filters'}
+                    {showFilters ? 'Hide Filters' : 'Show Filters'}
                 </button>
             </div>
 
             {/* Filters Panel (toggleable) */}
-            {open && (
+            {showFilters && (
                 <div className="mt-4 flex flex-col gap-4">
+                    {hasActiveFilters && (
                     <button
                         onClick={onResetFilters}
                         className="w-full rounded-md bg-light_reset_filters_bg px-3 py-2 text-sm font-medium text-light_reset_filters_text hover:bg-light_reset_filters_bg_hover dark:bg-dark_reset_filters_bg dark:text-dark_reset_filters_text dark:hover:bg-dark_reset_filters_bg_hover"
                     >
                         Reset Filters
                     </button>
+                    )}
+                    {/* Date Range Filter */}
 
                     <div className="grid grid-cols-1 gap-4">
                         {dateRangeFilter && (

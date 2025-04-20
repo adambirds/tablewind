@@ -32,7 +32,6 @@ interface TableActionsBarDesktopProps {
     };
     markAllSelected: () => void;
     bulkActions?: BulkAction[];
-    filterKeys?: string[];
 }
 
 const TableActionsBarDesktop: React.FC<TableActionsBarDesktopProps> = ({
@@ -54,7 +53,6 @@ const TableActionsBarDesktop: React.FC<TableActionsBarDesktopProps> = ({
     data,
     markAllSelected,
     bulkActions,
-    filterKeys = [],
 }) => {
     return (
         <div className="hidden mb-4 sm:flex sm:flex-col sm:flex-row sm:items-center sm:justify-between">

@@ -84,4 +84,6 @@ export interface DataTableProps<T> {
     errorComponent?: React.ReactNode;
     redirectOnError?: () => void;
     navigate?: (url: string) => void;
+    showMobileFilters: boolean;
+    setShowMobileFilters: (open: boolean) => void;
 }
