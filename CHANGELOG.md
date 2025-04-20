@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v3.0.0] - 2025-04-20
+
+### Added
+
+- Added specific mobile styling to improve mobile layout.
+- **Breaking Change**: You now need to pass state, to the props `showMobileFilters` and `setShowMobileFilters` to ensure mobile filters stay open on filter change.
+
 ## [v2.6.0] - 2025-04-20
 
 ### Added
