@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.6.0] - 2025-04-20
+
+### Added
+
+- Added default `Error` and Loading components to improve the UX.
+- Added support for passing a custom error component by the prop `errorComponent`.
+- Added support for passing a custom loading component by the prop `loadingComponent`.
+- Added the ability redirect on error instead. You can pass a navigate/router function to the prop `redirectOnError`.
+
+### Fixed
+
+- Fix issue fetching all records when clicking mark all selected.
+
 ## [v2.5.1] - 2025-04-19
 
 ### Fixed
