@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file. This projec
 
 ## [v3.0.0] - 2025-04-20
 
+### Fixed
+
+- Fix an issue where changing/resetting filters can cause an infinte loop.
+- Fix an issue with date presets not quite accurate. A month is now assumed to be 30 days.
+
 ### Added
 
 - Added specific mobile styling to improve mobile layout.
