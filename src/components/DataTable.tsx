@@ -285,27 +285,34 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     // ------------------------
     // "Mark All" functionality.
     // ------------------------
+    const effectiveFetcher = fetcher ?? ((url: string) =>
+        fetch(url).then((res) => res.json()));
+    
+
     const markAllSelected = async () => {
         if (!data) return;
+    
         const params = buildQueryParams();
         params.set('page', '1');
         params.set('page_size', String(data.pagination.total_items));
         const url = `${endpoint}?${params.toString()}`;
+    
         try {
-            const res = await fetch(url);
-            if (!res.ok) {
-                console.error('Error fetching all posts');
+            const allData = await effectiveFetcher(url);
+    
+            if (!allData || !Array.isArray(allData.results)) {
+                console.error('Invalid response shape from fetcher');
                 return;
             }
-            const allData = await res.json();
-            setSelectedIds(
-                allData.results.map((row: { id: string }) => row.id)
-            );
+    
+            setSelectedIds(allData.results.map((row: { id: string }) => row.id));
             setAllItemsSelected(true);
-        } catch (error) {
-            console.error('Error fetching all posts', error);
+        } catch (err) {
+            console.error('Error fetching all items using fetcher:', err);
         }
     };
+    
+    
 
     const cancelAllSelection = () => {
         setSelectedIds([]);
