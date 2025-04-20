@@ -7,7 +7,7 @@ import React, {
     useCallback,
 } from 'react';
 import { createPortal } from 'react-dom';
-import { format, parseISO, isValid } from 'date-fns';
+import { parseISO, isValid } from 'date-fns';
 import { utcStartOfDay, utcEndOfDay } from '../utils/utcConverters';
 
 interface Preset {
@@ -24,8 +24,14 @@ interface DateRangeFilterProps {
     queryParamBase: string;
 }
 
-const formatDateDisplay = (date: string) =>
-    format(parseISO(date), 'dd/MM/yyyy');
+function formatUTCDateForInput(date: Date): string {
+    return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}-${String(date.getUTCDate()).padStart(2, '0')}`;
+}
+
+function formatDateDisplay(isoString: string): string {
+    const d = parseISO(isoString);
+    return `${String(d.getUTCDate()).padStart(2, '0')}/${String(d.getUTCMonth() + 1).padStart(2, '0')}/${d.getUTCFullYear()}`;
+}
 
 const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     initialStartDate,
@@ -35,10 +41,12 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     queryParamBase,
 }) => {
     const [startDate, setStartDate] = useState<string>(
-        initialStartDate ? format(parseISO(initialStartDate), 'yyyy-MM-dd') : ''
+        initialStartDate
+            ? formatUTCDateForInput(parseISO(initialStartDate))
+            : ''
     );
     const [endDate, setEndDate] = useState<string>(
-        initialEndDate ? format(parseISO(initialEndDate), 'yyyy-MM-dd') : ''
+        initialEndDate ? formatUTCDateForInput(parseISO(initialEndDate)) : ''
     );
     const [appliedStartDate, setAppliedStartDate] = useState<string>(
         initialStartDate
@@ -56,96 +64,67 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     const dropdownRef = useRef<HTMLDivElement>(null);
     const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
 
-    const now = useMemo(() => new Date(), []);
+    const now = useMemo(() => {
+        const d = new Date();
+        return new Date(
+            Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())
+        );
+    }, []);
+
     const presets = useMemo<Preset[]>(() => {
         const today = now;
-        const subtractDays = (days: number) => {
-            const date = new Date(today);
-            date.setDate(date.getDate() - days);
-            return date;
+    
+        const subtractDays = (days: number): Date => {
+            const copy = new Date(today);
+            copy.setUTCDate(copy.getUTCDate() - days);
+            return new Date(Date.UTC(copy.getUTCFullYear(), copy.getUTCMonth(), copy.getUTCDate()));
         };
-        const subtractMonths = (months: number) => {
-            const date = new Date(today);
-            date.setMonth(date.getMonth() - months);
-            return date;
-        };
+    
         return [
-            {
-                label: 'Today',
-                start: utcStartOfDay(today),
-                end: utcEndOfDay(today),
-            },
-            {
-                label: 'Yesterday',
-                start: utcStartOfDay(subtractDays(1)),
-                end: utcEndOfDay(subtractDays(1)),
-            },
-            {
-                label: 'Last 7 Days',
-                start: utcStartOfDay(subtractDays(7)),
-                end: utcEndOfDay(today),
-            },
-            {
-                label: 'Last 30 Days',
-                start: utcStartOfDay(subtractDays(30)),
-                end: utcEndOfDay(today),
-            },
-            {
-                label: 'Last 3 Months',
-                start: utcStartOfDay(subtractMonths(3)),
-                end: utcEndOfDay(today),
-            },
-            {
-                label: 'Last 6 Months',
-                start: utcStartOfDay(subtractMonths(6)),
-                end: utcEndOfDay(today),
-            },
+            { label: 'Today', start: utcStartOfDay(today), end: utcEndOfDay(today) },
+            { label: 'Yesterday', start: utcStartOfDay(subtractDays(1)), end: utcEndOfDay(subtractDays(1)) },
+            { label: 'Last 7 Days', start: utcStartOfDay(subtractDays(7)), end: utcEndOfDay(today) },
+            { label: 'Last 30 Days', start: utcStartOfDay(subtractDays(30)), end: utcEndOfDay(today) },
+            { label: 'Last 3 Months', start: utcStartOfDay(subtractDays(90)), end: utcEndOfDay(today) },
+            { label: 'Last 6 Months', start: utcStartOfDay(subtractDays(180)), end: utcEndOfDay(today) },
             {
                 label: 'This Month',
-                start: utcStartOfDay(
-                    new Date(today.getFullYear(), today.getMonth(), 1)
-                ),
+                start: utcStartOfDay(new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1))),
                 end: utcEndOfDay(today),
             },
             {
                 label: 'Last Month',
-                start: utcStartOfDay(
-                    new Date(today.getFullYear(), today.getMonth() - 1, 1)
-                ),
-                end: utcEndOfDay(
-                    new Date(today.getFullYear(), today.getMonth(), 0)
-                ),
+                start: utcStartOfDay(new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() - 1, 1))),
+                end: utcEndOfDay(new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 0))),
             },
             {
                 label: 'This Year',
-                start: utcStartOfDay(new Date(today.getFullYear(), 0, 1)),
+                start: utcStartOfDay(new Date(Date.UTC(today.getUTCFullYear(), 0, 1))),
                 end: utcEndOfDay(today),
             },
             {
                 label: 'Last Year',
-                start: utcStartOfDay(new Date(today.getFullYear() - 1, 0, 1)),
-                end: utcEndOfDay(new Date(today.getFullYear() - 1, 11, 31)),
+                start: utcStartOfDay(new Date(Date.UTC(today.getUTCFullYear() - 1, 0, 1))),
+                end: utcEndOfDay(new Date(Date.UTC(today.getUTCFullYear() - 1, 11, 31))),
             },
             {
                 label: 'Last 5 Years',
-                start: utcStartOfDay(new Date(today.getFullYear() - 5, 0, 1)),
+                start: utcStartOfDay(subtractDays(365 * 5)),
                 end: utcEndOfDay(today),
             },
             {
                 label: 'All Time',
-                start: utcStartOfDay(new Date(1970, 0, 1)),
+                start: utcStartOfDay(new Date(Date.UTC(1970, 0, 1))),
                 end: utcEndOfDay(today),
             },
         ];
-    }, [now]);
+    }, [now]);    
 
     const matchPreset = useCallback(
         (startISO: string, endISO: string): string | null => {
             for (const preset of presets) {
-                const presetStartISO = utcStartOfDay(
-                    preset.start
-                ).toISOString();
-                const presetEndISO = utcEndOfDay(preset.end).toISOString();
+                const presetStartISO = preset.start.toISOString();
+                const presetEndISO = preset.end.toISOString();
                 if (startISO === presetStartISO && endISO === presetEndISO) {
                     return preset.label;
                 }
@@ -160,29 +139,25 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
             const matched = matchPreset(appliedStartDate, appliedEndDate);
             return matched
                 ? matched
-                : `${formatDateDisplay(appliedStartDate)} - ${formatDateDisplay(
-                      appliedEndDate
-                  )}`;
+                : `${formatDateDisplay(appliedStartDate)} - ${formatDateDisplay(appliedEndDate)}`;
         }
         return 'Filter by Date';
     }, [appliedStartDate, appliedEndDate, matchPreset]);
 
     useEffect(() => {
         if (initialStartDate) {
-            const isoStart = utcStartOfDay(
-                parseISO(initialStartDate)
-            ).toISOString();
-            setStartDate(format(parseISO(initialStartDate), 'yyyy-MM-dd'));
-            setAppliedStartDate(isoStart);
+            const parsedStart = parseISO(initialStartDate);
+            setStartDate(formatUTCDateForInput(parsedStart));
+            setAppliedStartDate(utcStartOfDay(parsedStart).toISOString());
         } else {
             setStartDate('');
             setAppliedStartDate('');
         }
 
         if (initialEndDate) {
-            const isoEnd = utcEndOfDay(parseISO(initialEndDate)).toISOString();
-            setEndDate(format(parseISO(initialEndDate), 'yyyy-MM-dd'));
-            setAppliedEndDate(isoEnd);
+            const parsedEnd = parseISO(initialEndDate);
+            setEndDate(formatUTCDateForInput(parsedEnd));
+            setAppliedEndDate(utcEndOfDay(parsedEnd).toISOString());
         } else {
             setEndDate('');
             setAppliedEndDate('');
@@ -217,12 +192,14 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     }, []);
 
     const apply = () => {
-        const parsedStart = parseISO(startDate);
-        const parsedEnd = parseISO(endDate);
+        const parsedStart = new Date(`${startDate}T00:00:00.000Z`);
+        const parsedEnd = new Date(`${endDate}T00:00:00.000Z`);
+
         if (!isValid(parsedStart) || !isValid(parsedEnd)) {
             console.warn('Invalid date selection', { startDate, endDate });
             return;
         }
+
         const appliedStart = utcStartOfDay(parsedStart).toISOString();
         const appliedEnd = utcEndOfDay(parsedEnd).toISOString();
         setAppliedStartDate(appliedStart);
@@ -244,10 +221,8 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     };
 
     const handlePresetClick = (preset: Preset) => {
-        setStartDate(
-            format(parseISO(preset.start.toISOString()), 'yyyy-MM-dd')
-        );
-        setEndDate(format(parseISO(preset.end.toISOString()), 'yyyy-MM-dd'));
+        setStartDate(formatUTCDateForInput(preset.start));
+        setEndDate(formatUTCDateForInput(preset.end));
     };
 
     const dropdown = (
