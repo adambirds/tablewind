@@ -4,6 +4,7 @@ import { ColumnConfig } from '../types';
 import { MultiSelectDropdown } from './MultiSelectDropdown';
 import { Switch } from '@headlessui/react';
 import { CustomDatePicker } from './CustomDatePicker';
+import { getValueFromPath } from '../utils/getValueFromPath';
 
 type OptionType = { id: string | number; name: string } | null;
 
@@ -21,11 +22,6 @@ interface TableBodyProps<T> {
     onCancelEdit?: () => void;
     onStartEdit?: (row: T) => void;
     handleDelete?: (id: string) => void;
-}
-
-// Helper to get nested values like "ebayItem.costOfGoodsPerItem"
-function getValueFromPath(obj: any, path: string): any {
-    return path.split('.').reduce((acc, part) => acc?.[part], obj);
 }
 
 export function TableBody<T extends { id: string } & Record<string, unknown>>({
