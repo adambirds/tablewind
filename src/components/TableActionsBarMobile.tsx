@@ -9,7 +9,9 @@ interface Props<T> {
     pageSubtitle?: string;
     dateRangeFilter?: { queryParamBase: string };
     query: Record<string, string | string[]>;
-    setQuery: React.Dispatch<React.SetStateAction<Record<string, string | string[]>>>;
+    setQuery: React.Dispatch<
+        React.SetStateAction<Record<string, string | string[]>>
+    >;
     filterFields: FilterField[];
     initialFilters: Record<string, string | string[]>;
     onFilterChange: (filters: Record<string, string | string[]>) => void;
@@ -87,8 +89,16 @@ function TableActionsBarMobile<T>({
                         {dateRangeFilter && (
                             <DateRangeFilter
                                 queryParamBase={dateRangeFilter.queryParamBase}
-                                initialStartDate={query[`${dateRangeFilter.queryParamBase}_gte`] as string}
-                                initialEndDate={query[`${dateRangeFilter.queryParamBase}_lte`] as string}
+                                initialStartDate={
+                                    query[
+                                        `${dateRangeFilter.queryParamBase}_gte`
+                                    ] as string
+                                }
+                                initialEndDate={
+                                    query[
+                                        `${dateRangeFilter.queryParamBase}_lte`
+                                    ] as string
+                                }
                                 onApply={(filters) =>
                                     setQuery((prev) => ({
                                         ...prev,
