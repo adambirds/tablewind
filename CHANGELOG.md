@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v3.1.0] - 2025-04-20
+
+### Added
+
+- Added the ability to pass the whole row to the bulk action rather than just the ID. You can choose between.
+
 ## [v3.0.0] - 2025-04-20
 
 ### Fixed
