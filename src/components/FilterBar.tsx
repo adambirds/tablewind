@@ -38,6 +38,7 @@ export function FilterBar({
 
     useEffect(() => {
         if (!shallowEqual(filters, initialFilters)) {
+            console.log('[FilterBar] syncing filters from props:', initialFilters);
             setFilters(initialFilters);
         }
     }, [initialFilters]);
@@ -48,11 +49,13 @@ export function FilterBar({
             return;
         }
         if (autoApply && !shallowEqual(filters, initialFilters)) {
+            console.log('[FilterBar] autoApply triggered - new filters:', filters);
             onFilterChange(filters);
         }
     }, [filters, autoApply, onFilterChange, initialFilters]);
 
     const handleChange = (field: FilterField, value: string | string[]) => {
+        console.log('[FilterBar] handleChange -', field.name, '=', value);
         setFilters((prev) => ({ ...prev, [field.name]: value }));
     };
 

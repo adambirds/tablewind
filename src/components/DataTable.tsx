@@ -87,6 +87,12 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     const [showFilters, setShowFilters] = useState(false);
     const toggleFilters = () => setShowFilters((prev) => !prev);
 
+    console.log('[DataTable render] query:', query, {
+        showFilters,
+        showMobileFilters,
+        selectedIds,
+    });
+
     // ------------------------
     // Inline editing functions
     // ------------------------
@@ -219,6 +225,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     const handleFilterChange = (
         newFilters: Record<string, string | string[]>
     ) => {
+        console.log('[DataTable] handleFilterChange called with:', newFilters);
         setQuery((prev) => {
             const merged = { ...prev, ...newFilters, page: '1' };
             return shallowEqual(prev, merged) ? prev : merged;
@@ -241,6 +248,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     // URL Sync
     // ------------------------
     useEffect(() => {
+        console.log('[DataTable] useEffect - query changed:', query);
         const params = buildQueryParams();
         const currentQueryString = new URLSearchParams(
             window.location.search
@@ -264,6 +272,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
         useState<FilterField[]>(filterFields);
 
     useEffect(() => {
+        console.log('[DataTable] useEffect - merging available_filters with filterFields');
         const apiFilters = data?.available_filters;
         if (apiFilters && Object.keys(apiFilters).length > 0) {
             setMergedFilterFields(
@@ -420,6 +429,9 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
         // otherwise, any non-empty string or non-empty array is “active”
         return Array.isArray(val) ? val.length > 0 : val !== '';
     });
+
+    console.log('[DataTable] filterKeys:', filterKeys);
+    console.log('[DataTable] query (before initialFiltersForBar):', query);
 
     const initialFiltersForBar = useMemo(() => {
         return filterKeys.reduce<Record<string, string | string[]>>(
