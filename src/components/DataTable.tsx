@@ -278,6 +278,11 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     };
 
     const results = data?.results ?? [];
+
+    const selectedRows = useMemo(() => {
+        return results.filter((row) => selectedIds.includes(row.id));
+    }, [results, selectedIds]);
+
     const selectAll = selectedIds.length >= results.length;
     const toggleSelectAll = () => {
         if (selectAll) {
@@ -412,7 +417,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
         <div>
             <div ref={extraContentRef}>
                 {/* Desktop Filter Header */}
-                <TableActionsBarDesktop
+                <TableActionsBarDesktop<T>
                     pageTitle={pageTitle}
                     pageSubtitle={pageSubtitle}
                     pageSize={pageSize}
@@ -448,9 +453,10 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                     data={data}
                     markAllSelected={markAllSelected}
                     bulkActions={bulkActions}
+                    selectedRows={selectedRows}
                 />
 
-                <TableActionsBarMobile
+                <TableActionsBarMobile<T>
                     pageTitle={pageTitle}
                     pageSubtitle={pageSubtitle}
                     dateRangeFilter={dateRangeFilter}
@@ -488,6 +494,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                     showFilters={showMobileFilters}
                     setShowFilters={setShowMobileFilters}
                     isMobile={isMobile}
+                    selectedRows={selectedRows}
                 />
 
                 {/* Inline filters shown only on desktop when toggled */}

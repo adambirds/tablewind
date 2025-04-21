@@ -1,23 +1,35 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
-export interface BulkAction {
-    key: string;
-    label: string;
-    onClick: (selectedIds: string[]) => void;
-}
+export type BulkAction<T = Record<string, unknown>> =
+    | {
+          key: string;
+          label: string;
+          onClick: (selectedIds: string[]) => void;
+          mode?: 'ids';
+          className?: string;
+      }
+    | {
+          key: string;
+          label: string;
+          onClick: (selectedRows: T[]) => void;
+          mode: 'objects';
+          className?: string;
+      };
 
-interface BulkActionDropdownProps {
-    actions: BulkAction[];
+interface BulkActionDropdownProps<T> {
+    actions: BulkAction<T>[];
     selectedIds: string[];
+    selectedRows?: T[];
     buttonLabel?: string;
 }
 
-export function BulkActionDropdown({
+export function BulkActionDropdown<T>({
     actions,
     selectedIds,
+    selectedRows,
     buttonLabel = 'Bulk Actions',
-}: BulkActionDropdownProps) {
+}: BulkActionDropdownProps<T>) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
     const containerRef = useRef<HTMLDivElement>(null);
@@ -52,8 +64,13 @@ export function BulkActionDropdown({
         }
     }, [menuOpen]);
 
-    const handleActionClick = (action: BulkAction) => {
-        action.onClick(selectedIds);
+    const handleActionClick = (action: BulkAction<T>) => {
+        if (action.mode === 'objects') {
+            action.onClick(selectedRows ?? []);
+        } else {
+            action.onClick(selectedIds);
+        }
+
         setMenuOpen(false);
     };
 
@@ -75,9 +92,7 @@ export function BulkActionDropdown({
                             {actions.map((action) => (
                                 <li key={action.key}>
                                     <button
-                                        onClick={() =>
-                                            handleActionClick(action)
-                                        }
+                                        onClick={() => handleActionClick(action)}
                                         className="group flex w-full items-center rounded-md px-4 py-3 text-left text-sm text-light_bulk_dropdown_text dark:text-dark_bulk_dropdown_text hover:bg-light_bulk_dropdown_bg_hover dark:hover:bg-dark_bulk_dropdown_bg_hover"
                                     >
                                         {action.label}

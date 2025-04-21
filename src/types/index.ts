@@ -39,17 +39,22 @@ export interface FilterField {
     options?: { id: string; name: string }[];
 }
 
-/** BulkAction allows the consumer to define custom bulk actions */
-export interface BulkAction {
-    /** Unique key for the action */
-    key: string;
-    /** Button label */
-    label: string;
-    /** Callback invoked when the action is triggered; receives the selected row IDs */
-    onClick: (selectedIds: string[]) => Promise<void> | void;
-    /** Optional additional class names for styling */
-    className?: string;
-}
+export type BulkAction<T = Record<string, unknown>> =
+    | {
+          key: string;
+          label: string;
+          onClick: (selectedIds: string[]) => void;
+          mode?: 'ids';
+          className?: string;
+      }
+    | {
+          key: string;
+          label: string;
+          onClick: (selectedRows: T[]) => void;
+          mode: 'objects';
+          className?: string;
+      };
+
 
 export interface DataTableProps<T> {
     /** The title of the page */
@@ -71,7 +76,7 @@ export interface DataTableProps<T> {
     /** Filter fields to render above the table */
     filterFields?: FilterField[];
     /** Bulk actions to render in the bulk actions bar */
-    bulkActions?: BulkAction[];
+    bulkActions?: BulkAction<T>[];
     /** Optional className to override container styling */
     className?: string;
     /** Handler for deleting */

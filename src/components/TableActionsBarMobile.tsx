@@ -4,14 +4,12 @@ import { FilterBar } from './FilterBar';
 import { FilterField, BulkAction } from '../types';
 import { BulkActionDropdown } from './BulkActionDropdown';
 
-interface Props {
+interface Props<T> {
     pageTitle?: string;
     pageSubtitle?: string;
     dateRangeFilter?: { queryParamBase: string };
     query: Record<string, string | string[]>;
-    setQuery: React.Dispatch<
-        React.SetStateAction<Record<string, string | string[]>>
-    >;
+    setQuery: React.Dispatch<React.SetStateAction<Record<string, string | string[]>>>;
     filterFields: FilterField[];
     initialFilters: Record<string, string | string[]>;
     onFilterChange: (filters: Record<string, string | string[]>) => void;
@@ -22,14 +20,15 @@ interface Props {
     allItemsSelected: boolean;
     data?: { pagination: { total_items: number } };
     markAllSelected: () => void;
-    bulkActions?: BulkAction[];
+    bulkActions?: BulkAction<T>[];
     hasActiveFilters: boolean;
     showFilters: boolean;
     setShowFilters: (open: boolean) => void;
     isMobile: boolean;
+    selectedRows?: T[];
 }
 
-const TableActionsBarMobile: React.FC<Props> = ({
+function TableActionsBarMobile<T>({
     pageTitle,
     pageSubtitle,
     dateRangeFilter,
@@ -50,10 +49,10 @@ const TableActionsBarMobile: React.FC<Props> = ({
     showFilters,
     setShowFilters,
     isMobile,
-}) => {
+    selectedRows,
+}: Props<T>) {
     return (
         <div className="block md:hidden mb-4">
-            {/* Title + Show Filters Button Inline */}
             <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
                     <h1 className="text-2xl font-bold text-light_tablewind_text_primary dark:text-dark_tablewind_text_primary">
@@ -73,7 +72,6 @@ const TableActionsBarMobile: React.FC<Props> = ({
                 </button>
             </div>
 
-            {/* Filters Panel (toggleable) */}
             {showFilters && (
                 <div className="mt-4 flex flex-col gap-4">
                     {hasActiveFilters && (
@@ -84,22 +82,13 @@ const TableActionsBarMobile: React.FC<Props> = ({
                             Reset Filters
                         </button>
                     )}
-                    {/* Date Range Filter */}
 
                     <div className="grid grid-cols-1 gap-4">
                         {dateRangeFilter && (
                             <DateRangeFilter
                                 queryParamBase={dateRangeFilter.queryParamBase}
-                                initialStartDate={
-                                    query[
-                                        `${dateRangeFilter.queryParamBase}_gte`
-                                    ] as string
-                                }
-                                initialEndDate={
-                                    query[
-                                        `${dateRangeFilter.queryParamBase}_lte`
-                                    ] as string
-                                }
+                                initialStartDate={query[`${dateRangeFilter.queryParamBase}_gte`] as string}
+                                initialEndDate={query[`${dateRangeFilter.queryParamBase}_lte`] as string}
                                 onApply={(filters) =>
                                     setQuery((prev) => ({
                                         ...prev,
@@ -137,7 +126,6 @@ const TableActionsBarMobile: React.FC<Props> = ({
                 </div>
             )}
 
-            {/* Mark All + Bulk Actions (ALWAYS visible below filters) */}
             <div className="mt-4 space-y-2">
                 {selectedIds.length > 0 &&
                     !allItemsSelected &&
@@ -153,15 +141,16 @@ const TableActionsBarMobile: React.FC<Props> = ({
 
                 {selectedIds.length > 0 && bulkActions && (
                     <div className="w-full">
-                        <BulkActionDropdown
+                        <BulkActionDropdown<T>
                             actions={bulkActions}
                             selectedIds={selectedIds}
+                            selectedRows={selectedRows}
                         />
                     </div>
                 )}
             </div>
         </div>
     );
-};
+}
 
 export default TableActionsBarMobile;

@@ -1,11 +1,9 @@
-// src/components/TableActionsBarDesktop.tsx
-
 import React from 'react';
 import DateRangeFilter from './DateRangeFilter';
-import { BulkAction } from '../types'; // Assuming BulkAction type is declared there
+import { BulkAction } from '../types';
 import { BulkActionDropdown } from './BulkActionDropdown';
 
-interface TableActionsBarDesktopProps {
+interface TableActionsBarDesktopProps<T> {
     pageTitle?: string;
     pageSubtitle?: string;
     pageSize: number;
@@ -31,10 +29,11 @@ interface TableActionsBarDesktopProps {
         };
     };
     markAllSelected: () => void;
-    bulkActions?: BulkAction[];
+    bulkActions?: BulkAction<T>[];
+    selectedRows?: T[];
 }
 
-const TableActionsBarDesktop: React.FC<TableActionsBarDesktopProps> = ({
+function TableActionsBarDesktop<T>({
     pageTitle,
     pageSubtitle,
     pageSize,
@@ -53,7 +52,8 @@ const TableActionsBarDesktop: React.FC<TableActionsBarDesktopProps> = ({
     data,
     markAllSelected,
     bulkActions,
-}) => {
+    selectedRows,
+}: TableActionsBarDesktopProps<T>) {
     return (
         <div className="hidden mb-4 sm:flex sm:flex-col sm:flex-row sm:items-center sm:justify-between">
             <div className="non-sticky-wrapper">
@@ -118,9 +118,10 @@ const TableActionsBarDesktop: React.FC<TableActionsBarDesktopProps> = ({
                         )}
 
                     {selectedIds.length > 0 && bulkActions && (
-                        <BulkActionDropdown
+                        <BulkActionDropdown<T>
                             actions={bulkActions}
                             selectedIds={selectedIds}
+                            selectedRows={selectedRows}
                         />
                     )}
 
@@ -166,6 +167,6 @@ const TableActionsBarDesktop: React.FC<TableActionsBarDesktopProps> = ({
             </div>
         </div>
     );
-};
+}
 
 export default TableActionsBarDesktop;
