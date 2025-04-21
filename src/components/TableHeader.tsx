@@ -24,7 +24,7 @@ export function TableHeader<T>({
     return (
         <thead className={className}>
             <tr className="ring-1 shadow ring-light_header_ring/5 bg-light_table_header_bg dark:bg-dark_table_header_bg dark:ring-dark_header_ring/5">
-                <th className="sticky left-0 rounded-tl-lg pl-2 bg-light_table_header_bg dark:bg-dark_table_header_bg">
+                <th className="md:sticky md:left-0 rounded-tl-lg pl-2 bg-light_table_header_bg dark:bg-dark_table_header_bg">
                     <input
                         type="checkbox"
                         checked={selectAll}
@@ -47,7 +47,7 @@ export function TableHeader<T>({
                     </th>
                 ))}
                 {anyEditable && (
-                    <th className="sticky right-0 rounded-tr-lg py-3.5 pr-4 pl-3 sm:pr-6 bg-light_table_header_bg dark:bg-dark_table_header_bg">
+                    <th className="md:sticky md:right-0 rounded-tr-lg py-3.5 pr-4 pl-3 sm:pr-6 bg-light_table_header_bg dark:bg-dark_table_header_bg">
                         <span className="sr-only">Actions</span>
                     </th>
                 )}
