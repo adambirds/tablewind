@@ -1,3 +1,4 @@
+// src/components/TableBody.tsx
 import React from 'react';
 import { ColumnConfig } from '../types';
 import { MultiSelectDropdown } from './MultiSelectDropdown';
@@ -22,6 +23,11 @@ interface TableBodyProps<T> {
     handleDelete?: (id: string) => void;
 }
 
+// Helper to get nested values like "ebayItem.costOfGoodsPerItem"
+function getValueFromPath(obj: any, path: string): any {
+    return path.split('.').reduce((acc, part) => acc?.[part], obj);
+}
+
 export function TableBody<T extends { id: string } & Record<string, unknown>>({
     data = [],
     columns,
@@ -38,12 +44,18 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
     const renderEditableCell = (col: ColumnConfig<T>, _row: T) => {
         const fieldKey = col.accessor as string;
         const value = editValues ? editValues[fieldKey] : '';
+
         switch (col.inputType) {
             case 'text':
                 return (
                     <input
                         type="text"
-                        value={typeof value === 'string' ? value : ''}
+                        value={
+                            typeof value === 'string' ||
+                            typeof value === 'number'
+                                ? value
+                                : ''
+                        }
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                             setEditValues &&
                             setEditValues((prev) => ({
@@ -79,13 +91,13 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                             value !== null &&
                             'id' in value
                                 ? (value as { id: string | number }).id
-                                : typeof value === 'string'
+                                : typeof value === 'string' ||
+                                    typeof value === 'number'
                                   ? value
                                   : ''
                         }
                         onChange={(e) => {
                             const rawValue = e.target.value;
-
                             let newValue: OptionType = null;
                             if (rawValue !== '') {
                                 newValue =
@@ -101,7 +113,7 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                                 }));
                             }
                         }}
-                        className="w-full rounded border bg-light_tablewind_bg_primary p-1 text-sm dark:bg-dark_tablewind_bg_primary text-light_tablewind_text_secondary dark:text-dark_tablewind_text_secondary"
+                        className="w-full rounded border bg-light_tablewind_bg_primary p-1 text-sm text-light_tablewind_text_secondary dark:bg-dark_tablewind_bg_primary dark:text-dark_tablewind_text_secondary"
                     >
                         <option value="">Select...</option>
                         {col.options?.map((opt) => (
@@ -130,19 +142,18 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                         }}
                     />
                 );
-                case 'datetime':
-                    return (
-                        <CustomDatePicker
-                            value={typeof value === 'string' ? value : null}
-                            onChange={(newIso) =>
-                                setEditValues?.((prev) => ({
-                                    ...prev,
-                                    [fieldKey]: newIso,
-                                }))
-                            }
-                        />
-                    );
-                
+            case 'datetime':
+                return (
+                    <CustomDatePicker
+                        value={typeof value === 'string' ? value : null}
+                        onChange={(newIso) =>
+                            setEditValues?.((prev) => ({
+                                ...prev,
+                                [fieldKey]: newIso,
+                            }))
+                        }
+                    />
+                );
             default:
                 return null;
         }
@@ -182,8 +193,10 @@ export function TableBody<T extends { id: string } & Record<string, unknown>>({
                                 : col.render
                                   ? col.render(row)
                                   : (() => {
-                                        const cell =
-                                            row[col.accessor as keyof T];
+                                        const cell = getValueFromPath(
+                                            row,
+                                            col.accessor as string
+                                        );
                                         return React.isValidElement(cell) ? (
                                             cell
                                         ) : (

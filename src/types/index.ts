@@ -17,17 +17,60 @@ export interface PaginatedResponse<T> {
 }
 
 export interface ColumnConfig<T> {
+    /**
+     * Label for the column header.
+     */
     label: string;
+
+    /**
+     * Path to access the value. Supports dot notation for nested fields (e.g. "ebayItem.sourceLocation").
+     */
     accessor: keyof T | string;
+
+    /**
+     * Key to use when saving the value in payload. Defaults to `accessor` if not provided.
+     * Use this to flatten nested objects into a flat payload for the API.
+     */
     saveKey?: string;
+
+    /**
+     * If true, this column can be sorted.
+     */
     sortable?: boolean;
+
+    /**
+     * Optional override key for sorting (e.g. Django ORM-compatible key like "ebay_item__source_location").
+     */
     sortKey?: string;
+
+    /**
+     * Custom rendering logic for a cell (used in non-editing mode).
+     */
     render?: (row: T) => React.ReactNode;
-    // New properties for inline editing:
+
+    /**
+     * Whether this field is editable in inline edit mode.
+     */
     editable?: boolean;
+
+    /**
+     * Type of input to use in inline edit mode.
+     */
     inputType?: 'text' | 'checkbox' | 'select' | 'multi-select' | 'datetime';
+
+    /**
+     * Used for `select` and `multi-select` input types.
+     */
     options?: Array<{ id: string; name: string }>;
+
+
+    /**
+     * Optional custom value getter for inline edit mode.
+     * Use this if you need to manually extract the value from a nested structure.
+     */
+    getValue?: (row: T) => unknown;
 }
+
 
 export type FilterFieldType = 'text' | 'select' | 'multi-select';
 

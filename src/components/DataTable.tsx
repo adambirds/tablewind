@@ -13,6 +13,7 @@ import DefaultLoading from './DataTableLoading';
 import DefaultError from './DataTableError';
 import TableActionsBarMobile from './TableActionsBarMobile';
 import TableActionsBarDesktop from './TableActionsBarDesktop';
+import { getValueFromPath } from '../utils/getValueFromPath';
 
 type EditValues = Record<string, unknown>;
 
@@ -92,22 +93,24 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     const startEditing = (row: T) => {
         setEditingRowId(row.id);
         const newValues: EditValues = {};
+
         columns.forEach((col) => {
             if (col.editable) {
-                const fieldValue = row[col.accessor as keyof T];
+                const fieldValue =
+                    typeof col.getValue === 'function'
+                        ? col.getValue(row)
+                        : getValueFromPath(row, col.accessor as string);
+
                 if (col.inputType === 'multi-select') {
                     const arr = Array.isArray(fieldValue) ? fieldValue : [];
                     newValues[col.accessor as string] = arr
                         .filter((item) => item !== null && item !== undefined)
                         .map((item) =>
-                            typeof item === 'object' &&
-                            item !== null &&
-                            'id' in item
-                                ? (item as { id: unknown }).id
+                            typeof item === 'object' && 'id' in item
+                                ? (item as { id: string }).id
                                 : item
                         );
                 } else if (col.inputType === 'select') {
-                    // If the value is already an object, store it directly.
                     if (
                         fieldValue &&
                         typeof fieldValue === 'object' &&
@@ -115,7 +118,6 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                     ) {
                         newValues[col.accessor as string] = fieldValue;
                     } else {
-                        // Otherwise, try to look up the corresponding object in col.options.
                         const selectedOption = col.options?.find(
                             (opt) => opt.id === fieldValue
                         );
@@ -127,28 +129,44 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                 }
             }
         });
+
         setEditValues(newValues);
     };
 
     const saveEdit = (id: string) => {
-        const payload: EditValues = { ...editValues };
+        const payload: EditValues = {};
+
+        console.log('Saving edit for row:', id, 'with values:', editValues);
+
         columns.forEach((col) => {
+            if (!col.editable) return;
+
+            const accessor = col.accessor as string;
+            const saveKey = col.saveKey || accessor;
+            const value = editValues[accessor];
+
             if (col.inputType === 'multi-select') {
-                const key = col.saveKey || (col.accessor as string);
-                const currentValue = editValues[col.accessor as string];
-                payload[key] = Array.isArray(currentValue)
-                    ? currentValue.filter(
+                payload[saveKey] = Array.isArray(value)
+                    ? value.filter(
                           (item) => item !== null && item !== undefined
                       )
                     : [];
-                if (col.saveKey) {
-                    delete payload[col.accessor as string];
-                }
+            } else if (col.inputType === 'select') {
+                payload[saveKey] =
+                    value && typeof value === 'object' && 'id' in value
+                        ? (value as { id: string | number }).id
+                        : value;
+            } else {
+                payload[saveKey] = value;
             }
         });
+
+        console.log('Payload for save:', payload);
+
         if (onEditSave) {
             onEditSave(id, payload);
         }
+
         setEditingRowId(null);
         setEditValues({});
     };
