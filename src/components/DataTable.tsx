@@ -87,12 +87,6 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     const [showFilters, setShowFilters] = useState(false);
     const toggleFilters = () => setShowFilters((prev) => !prev);
 
-    console.log('[DataTable render] query:', query, {
-        showFilters,
-        showMobileFilters,
-        selectedIds,
-    });
-
     // ------------------------
     // Inline editing functions
     // ------------------------
