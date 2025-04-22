@@ -13,7 +13,6 @@ interface Props<T> {
         React.SetStateAction<Record<string, string | string[]>>
     >;
     filterFields: FilterField[];
-    initialFilters: Record<string, string | string[]>;
     onFilterChange: (filters: Record<string, string | string[]>) => void;
     pageSize: number;
     onPageSizeChange: (size: number) => void;
@@ -37,7 +36,6 @@ function TableActionsBarMobile<T>({
     query,
     setQuery,
     filterFields,
-    initialFilters,
     onFilterChange,
     pageSize,
     onPageSizeChange,
@@ -128,9 +126,8 @@ function TableActionsBarMobile<T>({
                     {isMobile && (
                         <FilterBar
                             fields={filterFields}
-                            initialFilters={initialFilters}
+                            filters={query}
                             onFilterChange={onFilterChange}
-                            autoApply={true}
                         />
                     )}
                 </div>

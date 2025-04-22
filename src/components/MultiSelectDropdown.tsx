@@ -26,7 +26,6 @@ export function MultiSelectDropdown({
     const toggleDropdown = () => setIsOpen((prev) => !prev);
 
     const handleOptionClick = (id: string) => {
-        console.log('Clicked option id:', id);
         const currentSelected = Array.isArray(selected) ? selected : [];
         // Only add if id is truthy and not already included.
         if (id && !currentSelected.includes(id)) {
@@ -34,7 +33,6 @@ export function MultiSelectDropdown({
                 ...currentSelected.filter((x) => x !== null),
                 id,
             ];
-            console.log('New selection array:', newSelection);
             onChange(newSelection);
         }
         setIsOpen(false);

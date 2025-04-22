@@ -141,9 +141,6 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
 
     const saveEdit = (id: string) => {
         const payload: EditValues = {};
-
-        console.log('Saving edit for row:', id, 'with values:', editValues);
-
         columns.forEach((col) => {
             if (!col.editable) return;
 
@@ -166,9 +163,6 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                 payload[saveKey] = value;
             }
         });
-
-        console.log('Payload for save:', payload);
-
         if (onEditSave) {
             onEditSave(id, payload);
         }
@@ -225,7 +219,6 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     const handleFilterChange = (
         newFilters: Record<string, string | string[]>
     ) => {
-        console.log('[DataTable] handleFilterChange called with:', newFilters);
         setQuery((prev) => {
             const merged = { ...prev, ...newFilters, page: '1' };
             return shallowEqual(prev, merged) ? prev : merged;
@@ -248,7 +241,6 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     // URL Sync
     // ------------------------
     useEffect(() => {
-        console.log('[DataTable] useEffect - query changed:', query);
         const params = buildQueryParams();
         const currentQueryString = new URLSearchParams(
             window.location.search
@@ -272,7 +264,6 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
         useState<FilterField[]>(filterFields);
 
     useEffect(() => {
-        console.log('[DataTable] useEffect - merging available_filters with filterFields');
         const apiFilters = data?.available_filters;
         if (apiFilters && Object.keys(apiFilters).length > 0) {
             setMergedFilterFields(
@@ -430,19 +421,6 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
         return Array.isArray(val) ? val.length > 0 : val !== '';
     });
 
-    console.log('[DataTable] filterKeys:', filterKeys);
-    console.log('[DataTable] query (before initialFiltersForBar):', query);
-
-    const initialFiltersForBar = useMemo(() => {
-        return filterKeys.reduce<Record<string, string | string[]>>(
-            (acc, key) => {
-                acc[key] = query[key];
-                return acc;
-            },
-            {}
-        );
-    }, [filterKeys, query]);
-
     const filterContent = (
         <div>
             <div ref={extraContentRef}>
@@ -493,7 +471,6 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                     query={query}
                     setQuery={setQuery}
                     filterFields={mergedFilterFields}
-                    initialFilters={initialFiltersForBar}
                     onFilterChange={handleFilterChange}
                     pageSize={pageSize}
                     onPageSizeChange={handlePageSizeChange}
@@ -533,9 +510,8 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                         {!isMobile && (
                             <FilterBar
                                 fields={mergedFilterFields}
-                                initialFilters={initialFiltersForBar}
+                                filters={query}
                                 onFilterChange={handleFilterChange}
-                                autoApply={true}
                             />
                         )}
                     </div>

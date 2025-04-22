@@ -1,62 +1,25 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import { FilterField } from '../types';
 import { MultiSelectDropdown } from './MultiSelectDropdown';
 
 export interface FilterBarProps {
     fields: FilterField[];
-    initialFilters?: Record<string, string | string[]>;
+    filters: Record<string, string | string[]>;
     onFilterChange: (filters: Record<string, string | string[]>) => void;
     className?: string;
-    autoApply?: boolean;
-}
-
-// Generic shallow equality check.
-function shallowEqual<T extends Record<string, unknown>>(
-    objA: T,
-    objB: T
-): boolean {
-    const keysA = Object.keys(objA);
-    const keysB = Object.keys(objB);
-    if (keysA.length !== keysB.length) return false;
-    for (const key of keysA) {
-        if (objA[key] !== objB[key]) return false;
-    }
-    return true;
 }
 
 export function FilterBar({
     fields,
-    initialFilters = {},
+    filters,
     onFilterChange,
     className,
-    autoApply = true,
 }: FilterBarProps) {
-    const [filters, setFilters] =
-        useState<Record<string, string | string[]>>(initialFilters);
-    // Skip the very first auto-apply.
-    const isFirstRender = useRef(true);
-
-    useEffect(() => {
-        if (!shallowEqual(filters, initialFilters)) {
-            console.log('[FilterBar] syncing filters from props:', initialFilters);
-            setFilters(initialFilters);
-        }
-    }, [initialFilters]);
-
-    useEffect(() => {
-        if (isFirstRender.current) {
-            isFirstRender.current = false;
-            return;
-        }
-        if (autoApply && !shallowEqual(filters, initialFilters)) {
-            console.log('[FilterBar] autoApply triggered - new filters:', filters);
-            onFilterChange(filters);
-        }
-    }, [filters, autoApply, onFilterChange, initialFilters]);
-
-    const handleChange = (field: FilterField, value: string | string[]) => {
-        console.log('[FilterBar] handleChange -', field.name, '=', value);
-        setFilters((prev) => ({ ...prev, [field.name]: value }));
+    const setFilter = (key: string, value: string | string[]) => {
+        onFilterChange({
+            ...filters,
+            [key]: value,
+        });
     };
 
     return (
@@ -78,12 +41,16 @@ export function FilterBar({
                                             ''
                                         }
                                         onChange={(e) =>
-                                            handleChange(field, e.target.value)
+                                            setFilter(
+                                                field.name,
+                                                e.target.value
+                                            )
                                         }
                                         className="w-full rounded-md border border-light_tablewind_border_primary bg-light_tablewind_bg_primary px-3 py-2 text-sm font-medium text-light_tablewind_text_secondary hover:bg-light_tablewind_bg_primary_hover focus:outline-none dark:border-dark_tablewind_border_primary dark:bg-dark_tablewind_bg_primary dark:text-dark_tablewind_text_secondary dark:hover:bg-dark_tablewind_bg_primary_hover focus:ring-0"
                                     />
                                 </div>
                             );
+
                         case 'select':
                             return (
                                 <div key={field.name} className="flex flex-col">
@@ -95,7 +62,10 @@ export function FilterBar({
                                             ''
                                         }
                                         onChange={(e) =>
-                                            handleChange(field, e.target.value)
+                                            setFilter(
+                                                field.name,
+                                                e.target.value
+                                            )
                                         }
                                         className="w-full rounded-md border border-light_tablewind_border_primary bg-light_tablewind_bg_primary px-3 py-2 text-sm font-medium text-light_tablewind_text_secondary hover:bg-light_tablewind_bg_primary_hover focus:outline-none dark:border-dark_tablewind_border_primary dark:bg-dark_tablewind_bg_primary dark:text-dark_tablewind_text_secondary dark:hover:bg-dark_tablewind_bg_primary_hover focus:ring-0"
                                     >
@@ -113,6 +83,7 @@ export function FilterBar({
                                     </select>
                                 </div>
                             );
+
                         case 'multi-select': {
                             const currentValue = filters[field.name];
                             const selectedValue = Array.isArray(currentValue)
@@ -120,19 +91,21 @@ export function FilterBar({
                                 : typeof currentValue === 'string'
                                   ? currentValue.split(',').filter(Boolean)
                                   : [];
+
                             return (
                                 <div key={field.name} className="flex flex-col">
                                     <MultiSelectDropdown
                                         options={field.options || []}
                                         selected={selectedValue}
                                         onChange={(selected) =>
-                                            handleChange(field, selected)
+                                            setFilter(field.name, selected)
                                         }
                                         className="w-full"
                                     />
                                 </div>
                             );
                         }
+
                         default:
                             return null;
                     }
