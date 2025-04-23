@@ -55,9 +55,30 @@ export function MultiSelectDropdown({
         }
     }, [isOpen]);
 
+    useEffect(() => {
+        const handlePointerDown = (event: PointerEvent) => {
+            if (!containerRef.current?.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+    
+        if (isOpen) {
+            document.addEventListener('pointerdown', handlePointerDown);
+        }
+    
+        return () => {
+            document.removeEventListener('pointerdown', handlePointerDown);
+        };
+    }, [isOpen]);
+    
+
     const dropdown = isOpen && (
         <ul
-            style={dropdownStyle}
+            style={{
+                ...dropdownStyle,
+                maxHeight: '300px',
+                overflowY: 'auto',
+            }}
             className="z-50 rounded-md border border-light_tablewind_border_primary bg-light_tablewind_bg_primary text-sm shadow-sm dark:border-dark_tablewind_border_primary dark:bg-dark_tablewind_bg_primary dark:text-dark_tablewind_text_primary text-light_tablewind_text_primary"
         >
             {options
