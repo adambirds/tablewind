@@ -34,33 +34,32 @@ export function BulkActionDropdown<T>({
     const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
     const containerRef = useRef<HTMLDivElement>(null);
 
+    const toggleDropdown = () => setMenuOpen((prev) => !prev);
+
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (
                 containerRef.current &&
                 !containerRef.current.contains(event.target as Node)
             ) {
-                setMenuOpen(false);
+                setTimeout(() => setMenuOpen(false), 0);
             }
         };
-    
-        if (menuOpen) {
-            document.addEventListener('mousedown', handleClickOutside);
-        }
-    
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [menuOpen]);    
 
-    const toggleDropdown = () => setMenuOpen((prev) => !prev);
+        if (menuOpen) {
+            document.addEventListener('click', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, [menuOpen]);
 
     useEffect(() => {
         if (menuOpen && containerRef.current) {
             const rect = containerRef.current.getBoundingClientRect();
 
             if (window.innerWidth < 768) {
-                // Mobile: full width dropdown pinned under the button
                 setDropdownStyle({
                     position: 'fixed',
                     top: rect.bottom,
@@ -70,7 +69,6 @@ export function BulkActionDropdown<T>({
                     zIndex: 9999,
                 });
             } else {
-                // Desktop: use exact position and width of button
                 setDropdownStyle({
                     position: 'absolute',
                     top: rect.bottom + window.scrollY,

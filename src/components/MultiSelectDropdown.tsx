@@ -27,7 +27,6 @@ export function MultiSelectDropdown({
 
     const handleOptionClick = (id: string) => {
         const currentSelected = Array.isArray(selected) ? selected : [];
-        // Only add if id is truthy and not already included.
         if (id && !currentSelected.includes(id)) {
             const newSelection = [
                 ...currentSelected.filter((x) => x !== null),
@@ -56,21 +55,20 @@ export function MultiSelectDropdown({
     }, [isOpen]);
 
     useEffect(() => {
-        const handlePointerDown = (event: PointerEvent) => {
+        const handleClickOutside = (event: MouseEvent) => {
             if (!containerRef.current?.contains(event.target as Node)) {
-                setIsOpen(false);
+                setTimeout(() => setIsOpen(false), 0);
             }
         };
-    
+
         if (isOpen) {
-            document.addEventListener('pointerdown', handlePointerDown);
+            document.addEventListener('click', handleClickOutside);
         }
-    
+
         return () => {
-            document.removeEventListener('pointerdown', handlePointerDown);
+            document.removeEventListener('click', handleClickOutside);
         };
     }, [isOpen]);
-    
 
     const dropdown = isOpen && (
         <ul
@@ -86,10 +84,7 @@ export function MultiSelectDropdown({
                 .map((opt) => (
                     <li
                         key={opt.id}
-                        onClick={() => {
-                            handleOptionClick(opt.id);
-                            setIsOpen(false);
-                        }}
+                        onClick={() => handleOptionClick(opt.id)}
                         className="cursor-pointer px-3 py-2 hover:bg-light_tablewind_bg_primary_hover dark:hover:bg-dark_tablewind_bg_primary_hover"
                     >
                         {opt.name}
