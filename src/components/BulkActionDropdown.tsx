@@ -34,6 +34,25 @@ export function BulkActionDropdown<T>({
     const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
     const containerRef = useRef<HTMLDivElement>(null);
 
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                containerRef.current &&
+                !containerRef.current.contains(event.target as Node)
+            ) {
+                setMenuOpen(false);
+            }
+        };
+    
+        if (menuOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+    
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [menuOpen]);    
+
     const toggleDropdown = () => setMenuOpen((prev) => !prev);
 
     useEffect(() => {
