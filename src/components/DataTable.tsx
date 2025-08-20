@@ -512,7 +512,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                 )}
 
                 {allItemsSelected && data && (
-                    <div className="mb-4 rounded bg-light_success_alert_bg p-2 text-light_success_alert_text text-center dark:bg-dark_success_alert_bg dark:text-dark_success_alert_text">
+                    <div className="mb-4 mt-2 rounded bg-light_success_alert_bg p-2 text-light_success_alert_text text-center dark:bg-dark_success_alert_bg dark:text-dark_success_alert_text">
                         All {data.pagination.total_items} items are selected.
                         <button
                             onClick={cancelAllSelection}

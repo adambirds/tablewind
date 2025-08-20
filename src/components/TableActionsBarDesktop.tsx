@@ -139,15 +139,6 @@ function TableActionsBarDesktop<T>({
                         ))}
                     </select>
 
-                    {addNewUrl && (
-                        <button
-                            onClick={() => nav(addNewUrl)}
-                            className="rounded-md bg-light_tablewind_accent dark:bg-dark_tablewind_accent px-4 py-2 text-sm font-semibold text-light_tablewind_text_primary shadow-sm dark:hover:bg-dark_tablewind_accent_hover hover:light_tablewind_accent_hover"
-                        >
-                            Add New
-                        </button>
-                    )}
-
                     <button
                         onClick={onToggleFilters}
                         className="rounded-md px-3 py-2 text-sm font-medium bg-light_show_filters_bg text-light_show_filters_text hover:bg-light_show_filters_bg_hover dark:bg-dark_show_filters_bg dark:text-dark_show_filters_text dark:hover:bg-dark_show_filters_bg_hover"
@@ -161,6 +152,15 @@ function TableActionsBarDesktop<T>({
                             className="rounded-md bg-light_reset_filters_bg px-3 py-2 text-sm font-medium text-light_reset_filters_text hover:bg-light_reset_filters_bg_hover dark:bg-dark_reset_filters_bg dark:text-dark_reset_filters_text dark:hover:bg-dark_reset_filters_bg_hover"
                         >
                             Reset Filters
+                        </button>
+                    )}
+                    
+                    {addNewUrl && (
+                        <button
+                            onClick={() => nav(addNewUrl)}
+                            className="rounded-md bg-light_tablewind_accent dark:bg-dark_tablewind_accent px-4 py-2 text-sm font-semibold text-light_tablewind_text_primary shadow-sm dark:hover:bg-dark_tablewind_accent_hover hover:light_tablewind_accent_hover"
+                        >
+                            Add New
                         </button>
                     )}
                 </div>
