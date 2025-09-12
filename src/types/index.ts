@@ -134,4 +134,6 @@ export interface DataTableProps<T> {
     navigate?: (url: string) => void;
     showMobileFilters: boolean;
     setShowMobileFilters: (open: boolean) => void;
+    /** If true, shows an alert with the number of selected items when any items are selected */
+    showSelectionAlert?: boolean;
 }

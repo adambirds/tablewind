@@ -52,6 +52,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     redirectOnError,
     showMobileFilters,
     setShowMobileFilters,
+    showSelectionAlert = false,
 }: DataTableProps<T> & InlineEditCallbacks) {
     // Define a default navigation function (fallback for plain React apps)
     const defaultNavigate = (url: string) => {
@@ -511,7 +512,35 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                     </div>
                 )}
 
-                {allItemsSelected && data && (
+                {/* Selection alert - shows based on showSelectionAlert prop */}
+                {showSelectionAlert && selectedIds.length > 0 && data && (
+                    <div className="mb-4 mt-2 rounded bg-light_success_alert_bg p-2 text-light_success_alert_text text-center dark:bg-dark_success_alert_bg dark:text-dark_success_alert_text">
+                        {allItemsSelected ? (
+                            <>
+                                All {data.pagination.total_items} items are selected.
+                                <button
+                                    onClick={cancelAllSelection}
+                                    className="ml-2 underline"
+                                >
+                                    Cancel
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                {selectedIds.length} item{selectedIds.length !== 1 ? 's' : ''} selected.
+                                <button
+                                    onClick={cancelAllSelection}
+                                    className="ml-2 underline"
+                                >
+                                    Cancel
+                                </button>
+                            </>
+                        )}
+                    </div>
+                )}
+
+                {/* Legacy behavior - only show when all items are selected and showSelectionAlert is false */}
+                {!showSelectionAlert && allItemsSelected && data && (
                     <div className="mb-4 mt-2 rounded bg-light_success_alert_bg p-2 text-light_success_alert_text text-center dark:bg-dark_success_alert_bg dark:text-dark_success_alert_text">
                         All {data.pagination.total_items} items are selected.
                         <button
