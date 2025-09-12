@@ -115,7 +115,7 @@ export interface DataTableProps<T> {
     /** Optional custom fetcher */
     fetcher?: (url: string) => Promise<PaginatedResponse<T>>;
     /** Callback when row selection changes */
-    onRowSelect?: (selectedIds: string[]) => void;
+    onRowSelect?: (selectedIds: string[], clearSelectionsAfterAction?: () => void) => void;
     /** Filter fields to render above the table */
     filterFields?: FilterField[];
     /** Bulk actions to render in the bulk actions bar */
@@ -136,4 +136,6 @@ export interface DataTableProps<T> {
     setShowMobileFilters: (open: boolean) => void;
     /** If true, shows an alert with the number of selected items when any items are selected */
     showSelectionAlert?: boolean;
+    /** If true, shows a checkbox to keep items selected after bulk actions */
+    showKeepSelectedOption?: boolean;
 }

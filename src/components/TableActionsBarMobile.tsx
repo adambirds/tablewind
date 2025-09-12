@@ -27,6 +27,7 @@ interface Props<T> {
     setShowFilters: (open: boolean) => void;
     isMobile: boolean;
     selectedRows?: T[];
+    clearSelectionsAfterAction?: () => void;
 }
 
 function TableActionsBarMobile<T>({
@@ -50,6 +51,7 @@ function TableActionsBarMobile<T>({
     setShowFilters,
     isMobile,
     selectedRows,
+    clearSelectionsAfterAction,
 }: Props<T>) {
     return (
         <div className="block md:hidden mb-4">
@@ -152,6 +154,7 @@ function TableActionsBarMobile<T>({
                             actions={bulkActions}
                             selectedIds={selectedIds}
                             selectedRows={selectedRows}
+                            clearSelectionsAfterAction={clearSelectionsAfterAction}
                         />
                     </div>
                 )}

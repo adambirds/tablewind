@@ -88,7 +88,7 @@ function MyPage() {
 | `columns`              | `ColumnConfig<T>[]`                         | Column definitions for the table.                                          | No       |
 | `initialQuery`         | `Record<string, string>`                    | Initial query params to pre-load filters or pagination.                    | Yes      |
 | `fetcher`              | `(url: string) => Promise<PaginatedResponse<T>>` | Custom function for fetching data.                                   | Yes      |
-| `onRowSelect`          | `(selectedIds: string[]) => void`           | Callback when row selection changes.                                       | Yes      |
+| `onRowSelect`          | `(selectedIds: string[], clearSelectionsAfterAction?: () => void) => void` | Callback when row selection changes. Optionally provides a function to clear selections after bulk actions. | Yes      |
 | `filterFields`         | `FilterField[]`                             | Array of field definitions for building the filter UI.                     | Yes      |
 | `bulkActions`          | `BulkAction[]`                              | List of bulk actions to display when multiple rows are selected.           | Yes      |
 | `className`            | `string`                                    | Custom CSS class for the table container.                                  | Yes      |
@@ -100,8 +100,56 @@ function MyPage() {
 | `navigate`             | `(url: string) => void`                     | Function used to navigate (Next.js or React Router).                       | Yes      |
 | `showMobileFilters`    | `boolean`                                   | Controls visibility of the filter panel on mobile.                         | No       |
 | `setShowMobileFilters` | `(open: boolean) => void`                   | Sets the visibility state of mobile filters.                               | No       |
+| `showSelectionAlert`   | `boolean`                                   | Shows an alert with the number of selected items when any items are selected. Defaults to `false`. | Yes      |
+| `showKeepSelectedOption` | `boolean`                                 | Shows a checkbox to keep items selected after bulk actions. Defaults to `false`. | Yes      |
 | `onEditSave`           | `(id: string, newValues: EditValues) => void` | Called when an inline edit is saved.                                    | Yes      |
 | `onEditCancel`         | `() => void`                                | Called when inline edit mode is cancelled.                                 | Yes      |
+
+## Selection Alert Features
+
+Tablewind provides optional features to enhance the user experience when selecting rows:
+
+### Selection Alert
+
+By default, Tablewind only shows an alert when all items are selected. You can enable a selection alert that appears whenever any items are selected:
+
+```tsx
+<DataTable
+    endpoint="/api/data"
+    columns={columns}
+    showSelectionAlert={true}  // Shows "X items selected" for any selection
+    // ... other props
+/>
+```
+
+### Keep Selected After Bulk Actions
+
+You can provide users with the option to keep items selected after performing bulk actions:
+
+```tsx
+<DataTable
+    endpoint="/api/data"
+    columns={columns}
+    showSelectionAlert={true}
+    showKeepSelectedOption={true}  // Shows checkbox to keep selections
+    bulkActions={[
+        {
+            key: 'delete',
+            label: 'Delete Selected',
+            onClick: (selectedIds, clearSelectionsAfterAction) => {
+                // Perform bulk delete
+                deleteItems(selectedIds).then(() => {
+                    // Conditionally clear selections based on user preference
+                    clearSelectionsAfterAction?.();
+                });
+            }
+        }
+    ]}
+    // ... other props
+/>
+```
+
+When `showKeepSelectedOption` is enabled, a checkbox labeled "Keep selected after bulk action" appears in the selection alert. Users can check this to prevent their selections from being cleared after bulk actions are performed.
 
 ## Importing CSS & Overriding Theme Colors
 

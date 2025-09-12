@@ -53,6 +53,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     showMobileFilters,
     setShowMobileFilters,
     showSelectionAlert = false,
+    showKeepSelectedOption = false,
 }: DataTableProps<T> & InlineEditCallbacks) {
     // Define a default navigation function (fallback for plain React apps)
     const defaultNavigate = (url: string) => {
@@ -79,6 +80,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     // Bulk selection state.
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
     const [allItemsSelected, setAllItemsSelected] = useState(false);
+    const [keepSelectedAfterAction, setKeepSelectedAfterAction] = useState(false);
 
     // Inline editing state.
     const [editingRowId, setEditingRowId] = useState<string | null>(null);
@@ -286,7 +288,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
             : selectedIds.filter((sid) => sid !== id);
         setSelectedIds(newSelected);
         if (onRowSelect) {
-            onRowSelect(newSelected);
+            onRowSelect(newSelected, clearSelectionsAfterAction);
         }
     };
 
@@ -340,6 +342,15 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     const cancelAllSelection = () => {
         setSelectedIds([]);
         setAllItemsSelected(false);
+        setKeepSelectedAfterAction(false);
+    };
+
+    // Function to conditionally clear selections after bulk actions
+    const clearSelectionsAfterAction = () => {
+        if (!keepSelectedAfterAction) {
+            setSelectedIds([]);
+            setAllItemsSelected(false);
+        }
     };
 
     // ------------------------
@@ -457,6 +468,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                     markAllSelected={markAllSelected}
                     bulkActions={bulkActions}
                     selectedRows={selectedRows}
+                    clearSelectionsAfterAction={clearSelectionsAfterAction}
                 />
 
                 <TableActionsBarMobile<T>
@@ -497,6 +509,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                     setShowFilters={setShowMobileFilters}
                     isMobile={isMobile}
                     selectedRows={selectedRows}
+                    clearSelectionsAfterAction={clearSelectionsAfterAction}
                 />
 
                 {/* Inline filters shown only on desktop when toggled */}
@@ -515,27 +528,48 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                 {/* Selection alert - shows based on showSelectionAlert prop */}
                 {showSelectionAlert && selectedIds.length > 0 && data && (
                     <div className="mb-4 mt-2 rounded bg-light_success_alert_bg p-2 text-light_success_alert_text text-center dark:bg-dark_success_alert_bg dark:text-dark_success_alert_text">
-                        {allItemsSelected ? (
-                            <>
-                                All {data.pagination.total_items} items are selected.
-                                <button
-                                    onClick={cancelAllSelection}
-                                    className="ml-2 underline"
-                                >
-                                    Cancel
-                                </button>
-                            </>
-                        ) : (
-                            <>
-                                {selectedIds.length} item{selectedIds.length !== 1 ? 's' : ''} selected.
-                                <button
-                                    onClick={cancelAllSelection}
-                                    className="ml-2 underline"
-                                >
-                                    Cancel
-                                </button>
-                            </>
-                        )}
+                        <div className="flex flex-col items-center space-y-2">
+                            <div>
+                                {allItemsSelected ? (
+                                    <>
+                                        All {data.pagination.total_items} items are selected.
+                                        <button
+                                            onClick={cancelAllSelection}
+                                            className="ml-2 underline"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        {selectedIds.length} item{selectedIds.length !== 1 ? 's' : ''} selected.
+                                        <button
+                                            onClick={cancelAllSelection}
+                                            className="ml-2 underline"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+                            {showKeepSelectedOption && (
+                                <div className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        id="keepSelected"
+                                        checked={keepSelectedAfterAction}
+                                        onChange={(e) => setKeepSelectedAfterAction(e.target.checked)}
+                                        className="h-4 w-4 rounded border-light_tablewind_border_primary text-light_tablewind_accent dark:text-dark_tablewind_accent focus:ring-light_tablewind_accent_hover dark:focus:ring-dark_tablewind_accent_hover dark:border-dark_tablewind_border_primary dark:bg-dark_tablewind_bg_primary checked:bg-light_tablewind_accent dark:checked:bg-dark_tablewind_accent"
+                                    />
+                                    <label 
+                                        htmlFor="keepSelected" 
+                                        className="text-sm font-medium cursor-pointer"
+                                    >
+                                        Keep selected after bulk action
+                                    </label>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 )}
 

@@ -5,14 +5,14 @@ export type BulkAction<T = Record<string, unknown>> =
     | {
           key: string;
           label: string;
-          onClick: (selectedIds: string[]) => void;
+          onClick: (selectedIds: string[], clearSelectionsAfterAction?: () => void) => void;
           mode?: 'ids';
           className?: string;
       }
     | {
           key: string;
           label: string;
-          onClick: (selectedRows: T[]) => void;
+          onClick: (selectedRows: T[], clearSelectionsAfterAction?: () => void) => void;
           mode: 'objects';
           className?: string;
       };
@@ -22,6 +22,7 @@ interface BulkActionDropdownProps<T> {
     selectedIds: string[];
     selectedRows?: T[];
     buttonLabel?: string;
+    clearSelectionsAfterAction?: () => void;
 }
 
 export function BulkActionDropdown<T>({
@@ -29,6 +30,7 @@ export function BulkActionDropdown<T>({
     selectedIds,
     selectedRows,
     buttonLabel = 'Bulk Actions',
+    clearSelectionsAfterAction,
 }: BulkActionDropdownProps<T>) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
@@ -83,9 +85,9 @@ export function BulkActionDropdown<T>({
 
     const handleActionClick = (action: BulkAction<T>) => {
         if (action.mode === 'objects') {
-            action.onClick(selectedRows ?? []);
+            action.onClick(selectedRows ?? [], clearSelectionsAfterAction);
         } else {
-            action.onClick(selectedIds);
+            action.onClick(selectedIds, clearSelectionsAfterAction);
         }
 
         setMenuOpen(false);
