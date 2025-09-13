@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v4.0.1] - 2025-09-13
+
+### Fixed
+
+- **onEditSave Callback**: Fixed bug where the `revalidate` function was not being passed to the `onEditSave` callback, causing inline editing to not refresh data after successful saves
+- **Type Definitions**: Updated `InlineEditCallbacks` interface to properly include the `revalidate` parameter in the `onEditSave` callback signature
+
 ## [v4.0.0] - 2025-09-12
 
 ### 🚨 BREAKING CHANGES

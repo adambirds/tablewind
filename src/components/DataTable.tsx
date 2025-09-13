@@ -18,7 +18,7 @@ import { getValueFromPath } from '../utils/getValueFromPath';
 type EditValues = Record<string, unknown>;
 
 interface InlineEditCallbacks {
-    onEditSave?: (id: string, newValues: EditValues) => void;
+    onEditSave?: (id: string, newValues: EditValues, revalidate?: () => void) => void;
     onEditCancel?: () => void;
 }
 
@@ -161,7 +161,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
             }
         });
         if (onEditSave) {
-            onEditSave(id, payload);
+            onEditSave(id, payload, mutate);
         }
 
         setEditingRowId(null);
