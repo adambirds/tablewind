@@ -115,7 +115,7 @@ export interface DataTableProps<T> {
     /** Optional custom fetcher */
     fetcher?: (url: string) => Promise<PaginatedResponse<T>>;
     /** Callback when row selection changes */
-    onRowSelect?: (selectedIds: string[], clearSelectionsAfterAction?: () => void) => void;
+    onRowSelect?: (selectedIds: string[], clearSelectionsAfterAction?: () => void, revalidate?: () => void) => void;
     /** Filter fields to render above the table */
     filterFields?: FilterField[];
     /** Bulk actions to render in the bulk actions bar */

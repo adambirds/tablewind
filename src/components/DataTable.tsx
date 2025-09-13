@@ -252,7 +252,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     // API URL
     // ------------------------
     const apiUrl = `${endpoint}?${buildQueryParams().toString()}`;
-    const { data, error, isLoading } = usePaginatedFetch<T>(apiUrl, fetcher);
+    const { data, error, isLoading, mutate } = usePaginatedFetch<T>(apiUrl, fetcher);
 
     // ------------------------
     // Merge available_filters from API into filterFields.
@@ -288,7 +288,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
             : selectedIds.filter((sid) => sid !== id);
         setSelectedIds(newSelected);
         if (onRowSelect) {
-            onRowSelect(newSelected, clearSelectionsAfterAction);
+            onRowSelect(newSelected, clearSelectionsAfterAction, mutate);
         }
     };
 
@@ -469,6 +469,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                     bulkActions={bulkActions}
                     selectedRows={selectedRows}
                     clearSelectionsAfterAction={clearSelectionsAfterAction}
+                    revalidate={mutate}
                 />
 
                 <TableActionsBarMobile<T>
@@ -510,6 +511,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                     isMobile={isMobile}
                     selectedRows={selectedRows}
                     clearSelectionsAfterAction={clearSelectionsAfterAction}
+                    revalidate={mutate}
                 />
 
                 {/* Inline filters shown only on desktop when toggled */}

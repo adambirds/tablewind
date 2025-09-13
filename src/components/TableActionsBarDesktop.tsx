@@ -32,6 +32,7 @@ interface TableActionsBarDesktopProps<T> {
     bulkActions?: BulkAction<T>[];
     selectedRows?: T[];
     clearSelectionsAfterAction?: () => void;
+    revalidate?: () => void;
 }
 
 function TableActionsBarDesktop<T>({
@@ -55,6 +56,7 @@ function TableActionsBarDesktop<T>({
     bulkActions,
     selectedRows,
     clearSelectionsAfterAction,
+    revalidate,
 }: TableActionsBarDesktopProps<T>) {
     return (
         <div className="hidden mb-4 sm:flex sm:flex-col sm:flex-row sm:items-center sm:justify-between">
@@ -125,6 +127,7 @@ function TableActionsBarDesktop<T>({
                             selectedIds={selectedIds}
                             selectedRows={selectedRows}
                             clearSelectionsAfterAction={clearSelectionsAfterAction}
+                            revalidate={revalidate}
                         />
                     )}
 

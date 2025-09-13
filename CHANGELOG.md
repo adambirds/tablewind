@@ -2,6 +2,88 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v4.0.0] - 2025-09-12
+
+### 🚨 BREAKING CHANGES
+
+- **Function Signatures Updated**: The `onRowSelect` callback now receives optional second and third parameters: `clearSelectionsAfterAction?: () => void, revalidate?: () => void`
+- **Bulk Action Signatures Updated**: All `BulkAction` onClick handlers now receive optional second and third parameters: `clearSelectionsAfterAction?: () => void, revalidate?: () => void`
+
+### Added
+
+- **Selection Alert Feature**: New `showSelectionAlert` prop to display selection count when any items are selected (instead of only when all items are selected)
+- **Keep Selected Option**: New `showKeepSelectedOption` prop to show a checkbox allowing users to keep selections after bulk actions
+- **Data Revalidation Support**: Added `revalidate` function to callbacks, enabling data refresh without component re-mounting
+- **Enhanced Bulk Actions**: Bulk actions now receive `clearSelectionsAfterAction` and `revalidate` functions for better control over selection state and data freshness
+
+### Changed
+
+- **CSS Variables**: Updated hardcoded colors in checkbox inputs to use consistent CSS variable theming system
+- **Selection Persistence**: Improved selection state management to work better with data revalidation
+
+### Migration Guide
+
+#### Breaking Changes
+1. **onRowSelect callback** (optional parameters added):
+   ```tsx
+   // Before
+   onRowSelect?: (selectedIds: string[]) => void;
+   
+   // After  
+   onRowSelect?: (
+     selectedIds: string[], 
+     clearSelectionsAfterAction?: () => void, 
+     revalidate?: () => void
+   ) => void;
+   ```
+
+2. **BulkAction onClick handlers** (optional parameters added):
+   ```tsx
+   // Before
+   onClick: (selectedIds: string[]) => void;
+   
+   // After
+   onClick: (
+     selectedIds: string[], 
+     clearSelectionsAfterAction?: () => void, 
+     revalidate?: () => void
+   ) => void;
+   ```
+
+#### Recommended Migration (for new features)
+To use the new "keep selected" functionality, replace component re-mounting patterns with the new `revalidate` function:
+
+```tsx
+// Current approach (still works, but prevents "keep selected" from working)
+const [refreshKey, setRefreshKey] = useState(0);
+<DataTable key={refreshKey} {...props} />
+```
+```tsx
+// Recommended approach (enables "keep selected" functionality)
+<DataTable
+  bulkActions={[
+    {
+      key: "delete",
+      label: "Delete Selected",
+      onClick: (
+        selectedIds: string[],
+        clearSelectionsAfterAction?: () => void,
+        revalidate?: () => void
+      ) => {
+        performBulkAction(selectedIds).then(() => {
+          revalidate?.();                 // Refresh data without losing selections
+          clearSelectionsAfterAction?.(); // Conditionally clear based on user preference
+        });
+      },
+    },
+  ]}
+  showSelectionAlert
+  showKeepSelectedOption
+  {...otherProps}
+/>
+
+```
+
 ## [v3.3.3] - 2025-04-23
 
 ### Fixed

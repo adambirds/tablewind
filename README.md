@@ -88,7 +88,7 @@ function MyPage() {
 | `columns`              | `ColumnConfig<T>[]`                         | Column definitions for the table.                                          | No       |
 | `initialQuery`         | `Record<string, string>`                    | Initial query params to pre-load filters or pagination.                    | Yes      |
 | `fetcher`              | `(url: string) => Promise<PaginatedResponse<T>>` | Custom function for fetching data.                                   | Yes      |
-| `onRowSelect`          | `(selectedIds: string[], clearSelectionsAfterAction?: () => void) => void` | Callback when row selection changes. Optionally provides a function to clear selections after bulk actions. | Yes      |
+| `onRowSelect`          | `(selectedIds: string[], clearSelectionsAfterAction?: () => void, revalidate?: () => void) => void` | Callback when row selection changes. Optionally provides a function to clear selections after bulk actions and a function to revalidate data. | Yes      |
 | `filterFields`         | `FilterField[]`                             | Array of field definitions for building the filter UI.                     | Yes      |
 | `bulkActions`          | `BulkAction[]`                              | List of bulk actions to display when multiple rows are selected.           | Yes      |
 | `className`            | `string`                                    | Custom CSS class for the table container.                                  | Yes      |
@@ -136,9 +136,11 @@ You can provide users with the option to keep items selected after performing bu
         {
             key: 'delete',
             label: 'Delete Selected',
-            onClick: (selectedIds, clearSelectionsAfterAction) => {
+            onClick: (selectedIds, clearSelectionsAfterAction, revalidate) => {
                 // Perform bulk delete
                 deleteItems(selectedIds).then(() => {
+                    // Refresh the data without losing component state
+                    revalidate?.();
                     // Conditionally clear selections based on user preference
                     clearSelectionsAfterAction?.();
                 });
@@ -150,6 +152,25 @@ You can provide users with the option to keep items selected after performing bu
 ```
 
 When `showKeepSelectedOption` is enabled, a checkbox labeled "Keep selected after bulk action" appears in the selection alert. Users can check this to prevent their selections from being cleared after bulk actions are performed.
+
+**Important**: Use the `revalidate` function instead of forcing component re-mounts (e.g., with key props) to refresh data. This preserves the selection state and allows the "keep selected" functionality to work properly.
+
+### Alternative Usage with onRowSelect
+
+You can also access the revalidate function through the `onRowSelect` callback:
+
+```tsx
+<DataTable
+    endpoint="/api/data"
+    columns={columns}
+    onRowSelect={(selectedIds, clearSelectionsAfterAction, revalidate) => {
+        // Store revalidate function for use in your bulk actions
+        console.log(`${selectedIds.length} items selected`);
+        // Use revalidate() when you need to refresh data
+    }}
+    // ... other props
+/>
+```
 
 ## Importing CSS & Overriding Theme Colors
 

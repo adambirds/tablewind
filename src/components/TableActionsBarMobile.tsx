@@ -28,6 +28,7 @@ interface Props<T> {
     isMobile: boolean;
     selectedRows?: T[];
     clearSelectionsAfterAction?: () => void;
+    revalidate?: () => void;
 }
 
 function TableActionsBarMobile<T>({
@@ -52,6 +53,7 @@ function TableActionsBarMobile<T>({
     isMobile,
     selectedRows,
     clearSelectionsAfterAction,
+    revalidate,
 }: Props<T>) {
     return (
         <div className="block md:hidden mb-4">
@@ -155,6 +157,7 @@ function TableActionsBarMobile<T>({
                             selectedIds={selectedIds}
                             selectedRows={selectedRows}
                             clearSelectionsAfterAction={clearSelectionsAfterAction}
+                            revalidate={revalidate}
                         />
                     </div>
                 )}
