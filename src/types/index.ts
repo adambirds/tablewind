@@ -138,4 +138,8 @@ export interface DataTableProps<T> {
     showSelectionAlert?: boolean;
     /** If true, shows a checkbox to keep items selected after bulk actions */
     showKeepSelectedOption?: boolean;
+    /** If true, shows an internal search bar in the table header */
+    searchEnabled?: boolean;
+    /** Placeholder text for the search input when searchEnabled is true */
+    searchPlaceholder?: string;
 }

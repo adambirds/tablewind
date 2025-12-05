@@ -19,3 +19,9 @@ export function DataTable<T extends { id: string }>({
 
   return <DataTableBase {...props} navigate={reactNavigate} />;
 }
+
+// Export SearchBar for external use (e.g., in navbars)
+export { SearchBar } from './components/SearchBar';
+
+// Export types
+export * from './types';

@@ -2,6 +2,7 @@ import React from 'react';
 import DateRangeFilter from './DateRangeFilter';
 import { BulkAction } from '../types';
 import { BulkActionDropdown } from './BulkActionDropdown';
+import { SearchBar } from './SearchBar';
 
 interface TableActionsBarDesktopProps<T> {
     pageTitle?: string;
@@ -33,6 +34,10 @@ interface TableActionsBarDesktopProps<T> {
     selectedRows?: T[];
     clearSelectionsAfterAction?: () => void;
     revalidate?: () => void;
+    searchEnabled?: boolean;
+    searchValue?: string;
+    onSearchChange?: (value: string) => void;
+    searchPlaceholder?: string;
 }
 
 function TableActionsBarDesktop<T>({
@@ -57,6 +62,10 @@ function TableActionsBarDesktop<T>({
     selectedRows,
     clearSelectionsAfterAction,
     revalidate,
+    searchEnabled = false,
+    searchValue = '',
+    onSearchChange,
+    searchPlaceholder = 'Search...',
 }: TableActionsBarDesktopProps<T>) {
     return (
         <div className="hidden mb-4 sm:flex sm:flex-col sm:flex-row sm:items-center sm:justify-between">
@@ -73,6 +82,15 @@ function TableActionsBarDesktop<T>({
             </div>
             <div className="non-sticky-wrapper">
                 <div className="sticky right-0 mt-4 flex items-center space-x-4 sm:mt-0">
+                    {searchEnabled && onSearchChange && (
+                        <SearchBar
+                            value={searchValue}
+                            onChange={onSearchChange}
+                            placeholder={searchPlaceholder}
+                            className="w-64"
+                        />
+                    )}
+
                     {dateRangeFilter && (
                         <DateRangeFilter
                             queryParamBase={dateRangeFilter.queryParamBase}

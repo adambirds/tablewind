@@ -22,3 +22,9 @@ export function DataTable<T extends { id: string }>({
     // Pass the navigate function and other props to the DataTableBase component.
     return <DataTableComponent {...props} navigate={nextNavigate} />;
 }
+
+// Export SearchBar for external use (e.g., in navbars)
+export { SearchBar } from './components/SearchBar';
+
+// Export types
+export * from './types';

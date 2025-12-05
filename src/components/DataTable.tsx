@@ -54,6 +54,8 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
     setShowMobileFilters,
     showSelectionAlert = false,
     showKeepSelectedOption = false,
+    searchEnabled = false,
+    searchPlaceholder = 'Search...',
 }: DataTableProps<T> & InlineEditCallbacks) {
     // Define a default navigation function (fallback for plain React apps)
     const defaultNavigate = (url: string) => {
@@ -219,6 +221,21 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
         setQuery((prev) => {
             const merged = { ...prev, ...newFilters, page: '1' };
             return shallowEqual(prev, merged) ? prev : merged;
+        });
+    };
+
+    // ------------------------
+    // Search function
+    // ------------------------
+    const handleSearchChange = (searchValue: string) => {
+        setQuery((prev) => {
+            const newQuery: Record<string, string | string[]> = { ...prev, page: '1' };
+            if (searchValue) {
+                newQuery.search = searchValue;
+            } else {
+                delete newQuery.search;
+            }
+            return shallowEqual(prev, newQuery) ? prev : newQuery;
         });
     };
 
@@ -402,7 +419,7 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
         () =>
             Object.keys(query).filter(
                 (key) =>
-                    !['page', 'page_size', 'sort_by', 'order'].includes(key)
+                    !['page', 'page_size', 'sort_by', 'order', 'search'].includes(key)
             ),
         [query]
     );
@@ -442,8 +459,9 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                     onResetFilters={() => {
                         const now = new Date();
                         setQuery((prev) => {
-                            const newQuery = { ...prev };
+                            const newQuery: Record<string, string | string[]> = { ...prev };
                             filterKeys.forEach((key) => delete newQuery[key]);
+                            delete newQuery.search;
                             if (dateRangeFilter) {
                                 newQuery[
                                     `${dateRangeFilter.queryParamBase}_gte`
@@ -470,6 +488,10 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                     selectedRows={selectedRows}
                     clearSelectionsAfterAction={clearSelectionsAfterAction}
                     revalidate={mutate}
+                    searchEnabled={searchEnabled}
+                    searchValue={(query.search as string) || ''}
+                    onSearchChange={handleSearchChange}
+                    searchPlaceholder={searchPlaceholder}
                 />
 
                 <TableActionsBarMobile<T>
@@ -485,8 +507,9 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                     onResetFilters={() => {
                         const now = new Date();
                         setQuery((prev) => {
-                            const newQuery = { ...prev };
+                            const newQuery: Record<string, string | string[]> = { ...prev };
                             filterKeys.forEach((key) => delete newQuery[key]);
+                            delete newQuery.search;
                             if (dateRangeFilter) {
                                 newQuery[
                                     `${dateRangeFilter.queryParamBase}_gte`
@@ -512,6 +535,10 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                     selectedRows={selectedRows}
                     clearSelectionsAfterAction={clearSelectionsAfterAction}
                     revalidate={mutate}
+                    searchEnabled={searchEnabled}
+                    searchValue={(query.search as string) || ''}
+                    onSearchChange={handleSearchChange}
+                    searchPlaceholder={searchPlaceholder}
                 />
 
                 {/* Inline filters shown only on desktop when toggled */}

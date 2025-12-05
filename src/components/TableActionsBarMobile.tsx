@@ -3,6 +3,7 @@ import DateRangeFilter from './DateRangeFilter';
 import { FilterBar } from './FilterBar';
 import { FilterField, BulkAction } from '../types';
 import { BulkActionDropdown } from './BulkActionDropdown';
+import { SearchBar } from './SearchBar';
 
 interface Props<T> {
     pageTitle?: string;
@@ -29,6 +30,10 @@ interface Props<T> {
     selectedRows?: T[];
     clearSelectionsAfterAction?: () => void;
     revalidate?: () => void;
+    searchEnabled?: boolean;
+    searchValue?: string;
+    onSearchChange?: (value: string) => void;
+    searchPlaceholder?: string;
 }
 
 function TableActionsBarMobile<T>({
@@ -54,6 +59,10 @@ function TableActionsBarMobile<T>({
     selectedRows,
     clearSelectionsAfterAction,
     revalidate,
+    searchEnabled = false,
+    searchValue = '',
+    onSearchChange,
+    searchPlaceholder = 'Search...',
 }: Props<T>) {
     return (
         <div className="block md:hidden mb-4">
@@ -78,6 +87,15 @@ function TableActionsBarMobile<T>({
 
             {showFilters && (
                 <div className="mt-4 flex flex-col gap-4">
+                    {searchEnabled && onSearchChange && (
+                        <SearchBar
+                            value={searchValue}
+                            onChange={onSearchChange}
+                            placeholder={searchPlaceholder}
+                            className="w-full"
+                        />
+                    )}
+
                     {hasActiveFilters && (
                         <button
                             onClick={onResetFilters}

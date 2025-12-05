@@ -25,6 +25,12 @@ Or using Yarn:
 yarn add tablewind
 ```
 
+Or using pnpm:
+
+```bash
+pnpm add tablewind
+```
+
 ## Peer Dependencies
 
 Ensure you have the following installed in your project:
@@ -102,8 +108,71 @@ function MyPage() {
 | `setShowMobileFilters` | `(open: boolean) => void`                   | Sets the visibility state of mobile filters.                               | No       |
 | `showSelectionAlert`   | `boolean`                                   | Shows an alert with the number of selected items when any items are selected. Defaults to `false`. | Yes      |
 | `showKeepSelectedOption` | `boolean`                                 | Shows a checkbox to keep items selected after bulk actions. Defaults to `false`. | Yes      |
+| `searchEnabled`        | `boolean`                                   | Enables the internal search bar in the table header. Defaults to `false`. | Yes      |
+| `searchPlaceholder`    | `string`                                    | Placeholder text for the search input. Defaults to `'Search...'`.         | Yes      |
 | `onEditSave`           | `(id: string, newValues: EditValues) => void` | Called when an inline edit is saved.                                    | Yes      |
 | `onEditCancel`         | `() => void`                                | Called when inline edit mode is cancelled.                                 | Yes      |
+
+## Search Functionality
+
+Tablewind provides flexible search capabilities that can be implemented in two ways:
+
+### Internal Search Bar
+
+Enable a built-in search bar within the table header:
+
+```tsx
+<DataTable
+    endpoint="/api/data"
+    columns={columns}
+    searchEnabled={true}
+    searchPlaceholder="Search items..."
+    // ... other props
+/>
+```
+
+The internal search bar:
+- Appears in the table header on both desktop and mobile views
+- Includes debouncing (300ms) to optimize API calls
+- Has a clear button to quickly reset the search
+- Automatically syncs with URL query parameters
+
+### External Search Bar
+
+Use a search bar from outside the library (e.g., in a navbar):
+
+```tsx
+import { SearchBar } from 'tablewind';
+
+function Navbar() {
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    
+    const handleSearch = (value: string) => {
+        const params = new URLSearchParams(searchParams);
+        if (value) {
+            params.set('search', value);
+        } else {
+            params.delete('search');
+        }
+        navigate(`?${params.toString()}`);
+    };
+
+    return (
+        <nav>
+            <SearchBar
+                value={searchParams.get('search') || ''}
+                onChange={handleSearch}
+                placeholder="Search..."
+            />
+        </nav>
+    );
+}
+```
+
+The DataTable will automatically pick up the `?search=value` query parameter from the URL and pass it to the API endpoint.
+
+**Note**: The search parameter is cleared when you use the "Reset Filters" button, whether using internal or external search.
 
 ## Selection Alert Features
 
@@ -303,6 +372,61 @@ The available override variables are:
 --light-multi-select-item-bg
 --light-multi-select-item-text
 ```
+
+## Local Development & Testing
+
+### Building the Library
+
+To build the library locally:
+
+```bash
+npm run build
+```
+
+This will:
+1. Compile TypeScript files using `tsc`
+2. Bundle the library using Rollup
+3. Output the compiled files to the `dist/` directory
+
+### Testing Locally in Another Project
+
+To test the library locally before publishing:
+
+1. **Build and pack the library:**
+   ```bash
+   npm run build
+   npm pack
+   ```
+   
+   This creates a `.tgz` file (e.g., `tablewind-4.1.0.tgz`)
+
+2. **Install in your test project:**
+   ```bash
+   cd /path/to/your/test-project
+   npm install /path/to/tablewind/tablewind-4.1.0.tgz
+   # Or with pnpm:
+   pnpm add /path/to/tablewind/tablewind-4.1.0.tgz
+   # Or with yarn:
+   yarn add /path/to/tablewind/tablewind-4.1.0.tgz
+   ```
+
+3. **Test your changes** in the test project
+
+4. **To update after making changes:**
+   ```bash
+   # In tablewind directory
+   npm run build
+   npm pack
+   
+   # In test project (npm)
+   npm install /path/to/tablewind/tablewind-4.1.0.tgz --force
+   # Or with pnpm:
+   pnpm add /path/to/tablewind/tablewind-4.1.0.tgz --force
+   # Or with yarn:
+   yarn add /path/to/tablewind/tablewind-4.1.0.tgz --force
+   ```
+
+**Note**: The GitHub Actions pipeline automatically handles building and deployment to npm when pushing tags or releases.
 
 ## Contributing
 
