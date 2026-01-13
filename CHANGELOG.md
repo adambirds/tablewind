@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v4.1.1] - 2026-01-13
+
+### Fixed
+
+- **Mobile "Add New" Button**: Added the "Add New" button to the mobile view (`TableActionsBarMobile`) that was previously only available on desktop. The button now appears next to the "Show Filters" button in the mobile header when `addNewUrl` prop is provided.
+
 ## [v4.1.0] - 2025-12-05
 
 ### Added

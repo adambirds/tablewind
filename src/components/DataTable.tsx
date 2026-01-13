@@ -539,6 +539,8 @@ export function DataTable<T extends { id: string } & Record<string, unknown>>({
                     searchValue={(query.search as string) || ''}
                     onSearchChange={handleSearchChange}
                     searchPlaceholder={searchPlaceholder}
+                    addNewUrl={addNewUrl}
+                    nav={nav}
                 />
 
                 {/* Inline filters shown only on desktop when toggled */}

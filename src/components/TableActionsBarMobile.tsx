@@ -34,6 +34,8 @@ interface Props<T> {
     searchValue?: string;
     onSearchChange?: (value: string) => void;
     searchPlaceholder?: string;
+    addNewUrl?: string;
+    nav?: (url: string) => void;
 }
 
 function TableActionsBarMobile<T>({
@@ -63,6 +65,8 @@ function TableActionsBarMobile<T>({
     searchValue = '',
     onSearchChange,
     searchPlaceholder = 'Search...',
+    addNewUrl,
+    nav,
 }: Props<T>) {
     return (
         <div className="block md:hidden mb-4">
@@ -77,12 +81,22 @@ function TableActionsBarMobile<T>({
                         </p>
                     )}
                 </div>
-                <button
-                    onClick={() => setShowFilters(!showFilters)}
-                    className="shrink-0 rounded-md bg-light_show_filters_bg px-3 py-2 text-sm font-medium text-light_show_filters_text hover:bg-light_show_filters_bg_hover dark:bg-dark_show_filters_bg dark:text-dark_show_filters_text dark:hover:bg-dark_show_filters_bg_hover"
-                >
-                    {showFilters ? 'Hide Filters' : 'Show Filters'}
-                </button>
+                <div className="flex shrink-0 gap-2">
+                    {addNewUrl && nav && (
+                        <button
+                            onClick={() => nav(addNewUrl)}
+                            className="rounded-md bg-light_tablewind_accent dark:bg-dark_tablewind_accent px-4 py-2 text-sm font-semibold text-light_tablewind_text_primary shadow-sm dark:hover:bg-dark_tablewind_accent_hover hover:light_tablewind_accent_hover"
+                        >
+                            Add New
+                        </button>
+                    )}
+                    <button
+                        onClick={() => setShowFilters(!showFilters)}
+                        className="rounded-md bg-light_show_filters_bg px-3 py-2 text-sm font-medium text-light_show_filters_text hover:bg-light_show_filters_bg_hover dark:bg-dark_show_filters_bg dark:text-dark_show_filters_text dark:hover:bg-dark_show_filters_bg_hover"
+                    >
+                        {showFilters ? 'Hide Filters' : 'Show Filters'}
+                    </button>
+                </div>
             </div>
 
             {showFilters && (
