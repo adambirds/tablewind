@@ -40,7 +40,7 @@ export function SearchBar({
             if (localValue !== value) {
                 onChangeRef.current(localValue);
             }
-        }, 300);
+        }, 600);
 
         return () => clearTimeout(timeoutId);
     }, [localValue, value]);

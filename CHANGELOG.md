@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v4.2.0] - 2026-01-21
+
+### Added
+
+- **Autocomplete Filter Type**: New `autocomplete` filter type for `FilterField` that provides a searchable dropdown with typeahead functionality:
+  - Real-time filtering of options as user types
+  - Keyboard navigation support (Enter to select, Escape to close)
+  - Clear button to reset selection
+  - Consistent dark/light mode styling
+  - New `placeholder` property on `FilterField` interface for customizing input placeholder text
+- **AutocompleteDropdown Component**: New standalone component exported for use outside of FilterBar
+
+### Changed
+
+- **Search Debounce**: Increased search input debounce from 300ms to 600ms to allow more time for typing before triggering API calls
+
 ## [v4.1.1] - 2026-01-13
 
 ### Fixed

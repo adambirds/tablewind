@@ -1,5 +1,6 @@
 import React from 'react';
 import { FilterField } from '../types';
+import { AutocompleteDropdown } from './AutocompleteDropdown';
 import { MultiSelectDropdown } from './MultiSelectDropdown';
 
 export interface FilterBarProps {
@@ -105,6 +106,28 @@ export function FilterBar({
                                 </div>
                             );
                         }
+
+                        case 'autocomplete':
+                            return (
+                                <div key={field.name} className="flex flex-col">
+                                    <AutocompleteDropdown
+                                        options={field.options || []}
+                                        value={
+                                            (filters[field.name] as string) ||
+                                            ''
+                                        }
+                                        onChange={(value) =>
+                                            setFilter(field.name, value)
+                                        }
+                                        placeholder={
+                                            field.placeholder ||
+                                            field.allOption ||
+                                            'Type to search...'
+                                        }
+                                        className="w-full"
+                                    />
+                                </div>
+                            );
 
                         default:
                             return null;

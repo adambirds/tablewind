@@ -72,7 +72,7 @@ export interface ColumnConfig<T> {
 }
 
 
-export type FilterFieldType = 'text' | 'select' | 'multi-select';
+export type FilterFieldType = 'text' | 'select' | 'multi-select' | 'autocomplete';
 
 export interface FilterField {
     name: string;
@@ -80,6 +80,8 @@ export interface FilterField {
     allOption?: string;
     type: FilterFieldType;
     options?: { id: string; name: string }[];
+    /** Placeholder text for text and autocomplete inputs */
+    placeholder?: string;
 }
 
 export type BulkAction<T = Record<string, unknown>> =

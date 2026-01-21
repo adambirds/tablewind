@@ -23,5 +23,8 @@ export function DataTable<T extends { id: string }>({
 // Export SearchBar for external use (e.g., in navbars)
 export { SearchBar } from './components/SearchBar';
 
+// Export AutocompleteDropdown for external use
+export { AutocompleteDropdown } from './components/AutocompleteDropdown';
+
 // Export types
 export * from './types';
